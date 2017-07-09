@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="show-desktop-button">
+  <schema path="/org/gnome/shell/extensions/showdesktopbutton/" id="org.gnome.shell.extensions.showdesktopbutton">
+    <key type="s" name="panel-position-key">
+     	<default>'left'</default>
+    	<summary>Position on panel.</summary>
+      	<description>Sets the position of the extension on the panel. Possible values are: Left, Center, Right.</description>
+    </key>
+  </schema>
+</schemalist>
