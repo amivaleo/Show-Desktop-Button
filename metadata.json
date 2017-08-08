@@ -12,11 +12,11 @@
     "3.14", 
     "3.16", 
     "3.18", 
-    "3.20",
-    "3.22",
+    "3.20", 
+    "3.22", 
     "3.24"
   ], 
-  "url": "https://github.com/l300lvl/Show-Desktop-Button", 
+  "url": "https://github.com/amivaleo/Show-Desktop-Button", 
   "uuid": "show-desktop-button@amivaleo", 
-  "version": 1.1
+  "version": 3
 }
