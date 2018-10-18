@@ -22,7 +22,7 @@ let indicatorBox, icon, _desktopShown, _alreadyMinimizedWindows, box, _settings,
 function _getWindowToControl ()
 {
 	let win = global.display.focus_window,
-	workspace = global.screen.get_active_workspace(),
+	workspace = global.workspace_manager.get_active_workspace(),
 	windows = workspace.list_windows().filter(function (w) {return w.get_window_type() !== Meta.WindowType.DESKTOP;});
 	windows = global.display.sort_windows_by_stacking(windows);
 
@@ -44,7 +44,7 @@ function _getWindowToControl ()
 //toggles the desktop and icon when clicked
 function _showDesktop()
 {
-	let metaWorkspace = global.screen.get_active_workspace();
+	let metaWorkspace = global.workspace_manager.get_active_workspace();
 	let windows = metaWorkspace.list_windows();
 
 	if (_desktopShown)
