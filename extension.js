@@ -4,32 +4,32 @@ const Util = imports.misc.util;
 const Shell = imports.gi.Shell;
 
 let panelIndicator;
+let minimizedWindows = [];
 
 function toggleDesktop() {
 	let metaWorkspace = global.workspace_manager.get_active_workspace();
 	let windows = metaWorkspace.list_windows();
-	let minimizedWindows = [];
 	
-	for ( let i = 0; i < windows.length; ++i ) {																	// list all the already minimized windows in a separate array
-		if (windows[i].minimized) {
-			minimizedWindows.push(windows[i]);
-		}
-	}
-	
-	if (Main.overview.visible) {																									// if the user click on the panelIndicator while the overview is open -> close the overview
-		Main.overview.hide();
-	} else {
+	if (!Main.overview.visible) {																									// if the user click on the panelIndicator while the overview is open -> do nothing.
 		if (allWindowsAreMinimized) {
 			for ( let i = 0; i < windows.length; ++i ) {
 				for (let j = 0; j < minimizedWindows.length; j++) {
-					if (windows[i] != minimizedWindows[j]) {															// if the window was already minimized before, do not unimimize it
-						windows[i].unminimize(global.get_current_time());
+					if (windows[i] == minimizedWindows[j]) {															// if the window was already minimized before...
+						windows.splice(i, 1);																								// ... remove that window from the list of windows that will be uniminimized...
 					}
 				}
 			}
+			for ( let i = 0; i < windows.length; ++i ) {															// ... in this loop!
+				windows[i].unminimize(global.get_current_time());
+			}
+			minimizedWindows = [];
 		} else {
 			for ( let i = 0; i < windows.length; ++i ) {
-				windows[i].minimize(global.get_current_time());
+				if (windows[i].minimized) {																							// if the window is already minimized, add it to a separate array...
+					minimizedWindows.push(windows[i]);
+				} else {
+					windows[i].minimize(global.get_current_time());												// ... otherwise minimize that window.
+				}
 			}
 		}
 	
