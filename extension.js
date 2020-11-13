@@ -1,21 +1,49 @@
 const St = imports.gi.St;
 const Main = imports.ui.main;
+
+const Gio = imports.gi.Gio;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
-const Convenience = Me.imports.convenience;
+
+const Gettext = imports.gettext;
+const _ = Gettext.domain('show-desktop-button').gettext;
+
 const Util = imports.misc.util;
 const Shell = imports.gi.Shell;
 const Atk = imports.gi.Atk;
-const Keys = Me.imports.keys;
 const PanelMenu = imports.ui.panelMenu;
 
-let panelIndicator, position, _settings;
+const ExtensionName = Me.metadata.name;
+const ExtensionVersion = Me.metadata.version;
+
+let allWindowsAreMinimized = false;
+let position = "left";
+let panelButton;
 let minimizedWindows = [];
+
+let settings;
+
+function getSettings() {
+	let GioSSS = Gio.SettingsSchemaSource;
+	let schemaSource = GioSSS.new_from_directory(
+		Me.dir.get_child("schemas").get_path(),
+		GioSSS.get_default(),
+		false
+	);
+	
+	let schemaObj = schemaSource.lookup('org.gnome.shell.extensions.show-desktop-button', true);
+	
+	if (!schemaObj) {
+		throw new Error('cannot find schemas');
+	}
+	
+	return new Gio.Settings({ settings_schema : schemaObj });
+}
 
 function toggleDesktop() {
 	let metaWorkspace = global.workspace_manager.get_active_workspace();
 	let windows = metaWorkspace.list_windows();
-
-	// if the user click on the panelIndicator while the overview is open -> do nothing.
+	
+	// if the user click on the panelButton while the overview is open -> do nothing.
 	if (!Main.overview.visible) {
 		if (allWindowsAreMinimized) {
 			for ( let i = 0; i < windows.length; ++i ) {
@@ -42,49 +70,52 @@ function toggleDesktop() {
 				}
 			}
 		}
-
+		
 		allWindowsAreMinimized = !allWindowsAreMinimized;
 	}
 }
 
-function ShowDesktopButton() {
-	panelIndicator = new PanelMenu.Button(0.0, null, true);
-	panelIndicator.actor.accessible_role = Atk.Role.TOGGLE_BUTTON;
+function buildExtensionButton() {
+	panelButton = new PanelMenu.Button(0.0, null, true);
 	
 	let icon = new St.Icon({
 		icon_name: 'user-home-symbolic',
 		style_class: 'system-status-icon'});
+	
+	panelButton.actor.add_actor(icon);
+	panelButton.connect('button-press-event', toggleDesktop);
+	Main.panel.addToStatusArea(`${ExtensionName} Indicator`, panelButton, 1, position);	
+}
+
+function init() {
+
+	let localeDir = Me.dir.get_child('locale');
+	Gettext.bindtextdomain('show-desktop-button', localeDir.get_path());
+
+	settings = getSettings();
+	log ("AAAAAAAAAAAAAAAA my string: " + settings.get_string('panel-position-key'));
 		
-	panelIndicator.actor.add_actor(icon);
-	panelIndicator.actor.connect('button-press-event', toggleDesktop);
-
-	Main.panel.addToStatusArea("ShowDesktop", panelIndicator, 1, position);
-}
-
-function init(extensionMeta) {
-	_settings = Convenience.getSettings();
-	allWindowsAreMinimized = false;
-}
-
-function _setPosition() {
-	if (panelIndicator !== null){
-		disable();
-		enable();
-	}
 }
 
 function enable() {
-  this._settingsSignals = [];
-  this._settingsSignals.push(_settings.connect('changed::' + Keys.position, _setPosition));
-  
-  position = _settings.get_string(Keys.position);
-  
-	new ShowDesktopButton();
+	log ( _("Hello!") );
+	let key_name = "panel-position-key";
+	
+  // use 'changed::my-integer' signal for only my-integer change
+  // use 'changed' signal for any change
+
+
+
+  settings.connect('changed', (s, key_name) => {
+    let value = s.get_int(key_name);
+    log(`${key_name} value has been changed to ${value}`);
+   	Main.notify("Whatever");
+  });
+
+	new buildExtensionButton();
 }
 
 function disable() {
-	_settings.disconnect(this._settingsSignals);
-	Main.panel._rightBox.remove_child(panelIndicator);
-	panelIndicator.destroy();
-	panelIndicator = null;
+	panelButton.destroy();
+	panelButton = null;
 }
