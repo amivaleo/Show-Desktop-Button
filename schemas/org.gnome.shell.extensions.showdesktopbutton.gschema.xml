@@ -3,7 +3,7 @@
 	<schema path="/org/gnome/shell/extensions/show-desktop-button/" id="org.gnome.shell.extensions.show-desktop-button">
 
 		<key type="s" name="panel-position-key">
-			<default>'left'</default>
+			<default>'right'</default>
 			<summary>Position on panel.</summary>
 			<description>Sets the position of the extension on the panel. Possible values are: Left, Center, Right.</description>
 		</key>

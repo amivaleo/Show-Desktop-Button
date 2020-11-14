@@ -9,6 +9,7 @@ const _ = Gettext.domain('show-desktop-button').gettext;
 
 const Util = imports.misc.util;
 const Shell = imports.gi.Shell;
+const Meta = imports.gi.Meta;
 const Atk = imports.gi.Atk;
 const PanelMenu = imports.ui.panelMenu;
 
@@ -16,7 +17,7 @@ const ExtensionName = Me.metadata.name;
 const ExtensionVersion = Me.metadata.version;
 
 let allWindowsAreMinimized = false;
-let position = "left";
+let position;
 let panelButton;
 let minimizedWindows = [];
 
@@ -62,7 +63,7 @@ function toggleDesktop() {
 		} else {
 			for ( let i = 0; i < windows.length; ++i ) {
 				// if the window is already minimized, add it to a separate array...
-				if (windows[i].minimized) {
+				if (windows[i].minimized || windows[i].get_window_type() == Meta.WindowType.DESKTOP) {
 					minimizedWindows.push(windows[i]);
 				// ... otherwise minimize that window
 				} else {
@@ -84,7 +85,7 @@ function buildExtensionButton() {
 	
 	panelButton.actor.add_actor(icon);
 	panelButton.connect('button-press-event', toggleDesktop);
-	Main.panel.addToStatusArea(`${ExtensionName} Indicator`, panelButton, 1, position);	
+	Main.panel.addToStatusArea(`${ExtensionName} Indicator`, panelButton, 1, settings.get_string('panel-position-key'));	
 }
 
 function init() {
@@ -98,14 +99,6 @@ function init() {
 }
 
 function enable() {
-	log ( _("Hello!") );
-	let key_name = "panel-position-key";
-	
-  // use 'changed::my-integer' signal for only my-integer change
-  // use 'changed' signal for any change
-
-
-
   settings.connect('changed', (s, key_name) => {
     let value = s.get_int(key_name);
     log(`${key_name} value has been changed to ${value}`);
