@@ -5,10 +5,8 @@
   "extension-id": "show-desktop-button", 
   "gettext-domain": "show-desktop-button", 
   "localedir": "/usr/share/locale", 
-
   "settings-schema": "org.gnome.shell.extensions.show-desktop-button",
-
   "url": "https://github.com/amivaleo/Show-Desktop-Button",
   "uuid": "show-desktop-button@amivaleo", 
-  "version": 8.1
+  "version": 9
 }

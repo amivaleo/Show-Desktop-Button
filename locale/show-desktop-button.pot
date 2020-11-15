@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-12 19:14+0100\n"
+"POT-Creation-Date: 2020-11-15 18:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,26 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: extension.js:95
-msgid "Hello!"
-msgstr ""
-
-#: prefs.js:17
-msgid "Indicator position on panel"
-msgstr ""
-
-#: prefs.js:18
-msgid "Set indicator position on panel."
-msgstr ""
-
-#: prefs.js:20
-msgid "Left"
-msgstr ""
-
-#: prefs.js:21
-msgid "Center"
-msgstr ""
-
-#: prefs.js:22
-msgid "Right"
+#: tools.js:39
+msgid "Cannot find schemas"
 msgstr ""

@@ -21,12 +21,13 @@ v8:
 
 * Restored old pref dialogue
 
-v8.1:
+v9:
 
-* Attempts to make a new pref dialogue
+* Restored panel position feature
+* Modern pref dialog (contributions from [JustPerfection](https://gitlab.gnome.org/justperfection.channel))
 
 ## Credits
 
 [Author](https://extensions.gnome.org/accounts/profile/l300lvl) of the [original extension](https://extensions.gnome.org/extension/64/show-desktop-button/)
 
-[JustPerfection](https://gitlab.gnome.org/justperfection.channel) for [his tutorials](https://gitlab.gnome.org/justperfection.channel/gnome-shell-extension-samples)
+[JustPerfection](https://gitlab.gnome.org/justperfection.channel) for [his tutorials](https://gitlab.gnome.org/justperfection.channel/gnome-shell-extension-samples) and his substantial help
