@@ -1,4 +1,4 @@
-const Gio = imports.gi;
+const {Gio} = imports.gi;
 const Gettext = imports.gettext;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 
