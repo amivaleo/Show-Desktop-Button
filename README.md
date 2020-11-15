@@ -26,6 +26,10 @@ v9:
 * Restored panel position feature
 * Modern pref dialog (contributions from [JustPerfection](https://gitlab.gnome.org/justperfection.channel))
 
+v10:
+
+* Minor typo fixed
+
 ## Credits
 
 [Author](https://extensions.gnome.org/accounts/profile/l300lvl) of the [original extension](https://extensions.gnome.org/extension/64/show-desktop-button/)
