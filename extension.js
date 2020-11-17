@@ -13,14 +13,14 @@ const _ = Gettext.gettext;
 const ExtensionName = Me.metadata.name;
 const ExtensionVersion = Me.metadata.version;
 
+let allWindowsAreMinimized = false;
 let panelButton;
-
+let minimizedWindows = [];
 
 function toggleDesktop() {
-	let allWindowsAreMinimized = false;
+
 	let metaWorkspace = global.workspace_manager.get_active_workspace();
 	let windows = metaWorkspace.list_windows();
-	let minimizedWindows = [];
 	
 	// if the user click on the panelButton while the overview
 	// is open -> do nothing.
