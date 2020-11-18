@@ -13,46 +13,92 @@ const _ = Gettext.gettext;
 const ExtensionName = Me.metadata.name;
 const ExtensionVersion = Me.metadata.version;
 
-let allWindowsAreMinimized = false;
 let panelButton;
+
+// the panelButton works as a toggle button.
+// the two states on/off correspond to panelButtonStatus = true/false
+// true :: when the button has minimized the windows
+let panelButtonStatus;
+let ignoredWindows = [];
+
 
 function toggleDesktop() {
 
 	let metaWorkspace = global.workspace_manager.get_active_workspace();
 	let windows = metaWorkspace.list_windows();
-	let minimizedWindows = [];
+	
+	log("\n### " + ExtensionName + " debugging START ###");
+	
+	log('panelButtonStatus: ' + panelButtonStatus);
 	
 	// if the user click on the panelButton while the overview
 	// is open -> do nothing.
 	if (!Main.overview.visible) {
-		if (allWindowsAreMinimized) {
+	
+		// if panelButtonStatus == false <=> the button is in status off...
+		// this is the MINIMIZING action =>
+		// panelButtonStatus WAS false and WILL BE true
+		if (panelButtonStatus == false) {
+			
+			// cyle through all windows
 			for ( let i = 0; i < windows.length; ++i ) {
-				for (let j = 0; j < minimizedWindows.length; j++) {
-					// if the window was already minimized before, remove that window from
-					// the list of windows that will be uniminimized
-					if (windows[i] == minimizedWindows[j]) {
-						windows.splice(i, 1);
-					}
-				}
-			}
-			// unminimize only those windows there were not minimized before
-			for ( let i = 0; i < windows.length; ++i ) {
-				windows[i].unminimize();
-			}
-			minimizedWindows = [];
-		} else {
-			for ( let i = 0; i < windows.length; ++i ) {
-				// if the window is already minimized, add it to a separate array...
-				if (windows[i].minimized || windows[i].get_window_type() == Meta.WindowType.DESKTOP) {
-					minimizedWindows.push(windows[i]);
+				
+				log("i: " + i +
+						"\ttitle: " + windows[i].title + 
+						"\twindow_type: " + windows[i].window_type + 
+						"\twm_class: " + windows[i].wm_class.toLowerCase());
+
+				// if the window is already minimized or is a DESKTOP type
+				// or is the DING extension,
+				// add it to a separate array 'ignoredWindows'...
+				if (windows[i].minimized ||
+							windows[i].window_type == Meta.WindowType.DESKTOP ||
+							windows[i].title.startsWith('DING') ||
+							( windows[i].title.startsWith('@!') && windows[i].title.endsWith('BDH') )) {
+					ignoredWindows.push(windows[i]);
+					log('\t pushed into ignoredWindows: ' + windows[i].title);
+				
 				// ... otherwise minimize that window
 				} else {
 					windows[i].minimize();
 				}
 			}
+		
+		// if panelButtonStatus == true <=> the button is in status on...
+		// this is the UNMINIMIZING action =>
+		// panelButtonStatus WAS true and WILL BE false
+		} else if (panelButtonStatus == true) {
+			
+			// cyle through all windows
+			for ( let i = 0; i < windows.length; ++i ) {
+				
+				log("i: " + i +
+						"\ttitle: " + windows[i].title + 
+						"\twindow_type: " + windows[i].window_type + 
+						"\twm_class: " + windows[i].wm_class.toLowerCase());
+			
+				// check if the window was already minimized in the previous state
+				// since we don't want to uniminimize them, nor we want to do something
+				// to conky, desktop apps, ding, etc.
+				// it that's the case, splice that window from the array
+				for (let j = 0; j < ignoredWindows.length; j++) {
+					if (ignoredWindows[j] == windows[i]) {
+						log('\t this was in ignoredWindows: ' + windows[i].title);
+						windows.splice(i, 1);
+					}
+				}
+			}
+			
+			// after the pruning, unminimize only those windows in the 'windows' array
+			for ( let i = 0; i < windows.length; ++i ) {
+				windows[i].unminimize();
+			}
+		
+			// empty the separate array 'ignoredWindows'
+			ignoredWindows = [];
 		}
 		
-		allWindowsAreMinimized = !allWindowsAreMinimized;
+		panelButtonStatus = !panelButtonStatus;
 	}
 }
 
@@ -66,6 +112,8 @@ function getPanelButton() {
 	});
 	
 	panelButton.add_child(icon);
+	
+	panelButtonStatus = false;
 	panelButton.connect('button-press-event', toggleDesktop);
 	
 	return panelButton;
@@ -96,5 +144,7 @@ function enable() {
 }
 
 function disable() {
+	ignoredWindows = null;
+	panelButtonStatus = null;
 	removeButton();
 }
