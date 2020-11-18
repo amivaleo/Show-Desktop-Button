@@ -30,6 +30,14 @@ v10:
 
 * Minor typo fixed
 
+v11:
+
+* Minor typo...
+
+v12:
+
+* Ignores docks, conky and DING extension
+
 ## Credits
 
 [Author](https://extensions.gnome.org/accounts/profile/l300lvl) of the [original extension](https://extensions.gnome.org/extension/64/show-desktop-button/)
