@@ -40,6 +40,6 @@ v12:
 
 ## Credits
 
-[Author](https://extensions.gnome.org/accounts/profile/l300lvl) of the [original extension](https://extensions.gnome.org/extension/64/show-desktop-button/)
+[l300lvl](https://extensions.gnome.org/accounts/profile/l300lvl), author of the [original extension](https://extensions.gnome.org/extension/64/show-desktop-button/)
 
 [JustPerfection](https://gitlab.gnome.org/justperfection.channel) for [his tutorials](https://gitlab.gnome.org/justperfection.channel/gnome-shell-extension-samples) and his substantial help
