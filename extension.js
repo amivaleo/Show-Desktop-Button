@@ -53,8 +53,10 @@ function toggleDesktop() {
 				// add it to a separate array 'ignoredWindows'...
 				if (windows[i].minimized ||
 							windows[i].window_type == Meta.WindowType.DESKTOP ||
+							windows[i].window_type == Meta.WindowType.DOCK ||
 							windows[i].title.startsWith('DING') ||
-							( windows[i].title.startsWith('@!') && windows[i].title.endsWith('BDH') )) {
+							windows[i].wm_class.toLowerCase() == 'conky' ||
+							( windows[i].title.startsWith('@!') && windows[i].title.endsWith('BDH') ) ) {
 					ignoredWindows.push(windows[i]);
 					log('\t pushed into ignoredWindows: ' + windows[i].title);
 				
