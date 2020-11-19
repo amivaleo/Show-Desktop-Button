@@ -1,17 +1,17 @@
 const {Gio} = imports.gi;
-const Gettext = imports.gettext;
+//const Gettext = imports.gettext;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 
 
-function getGettext() {
-	
-	let domain = Me.metadata['gettext-domain'];
-	
-	Gettext.bindtextdomain(domain, Me.dir.get_child("locale").get_path());
-	Gettext.textdomain(domain);
-	
-	return Gettext;
-}
+//function getGettext() {
+//	
+//	let domain = Me.metadata['gettext-domain'];
+//	
+//	Gettext.bindtextdomain(domain, Me.dir.get_child("locale").get_path());
+//	Gettext.textdomain(domain);
+//	
+//	return Gettext;
+//}
 
 function getSettings() {
 

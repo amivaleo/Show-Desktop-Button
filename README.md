@@ -36,7 +36,15 @@ v11:
 
 v12:
 
+* Minor typo...
+
+v13:
+
 * Ignores docks, conky and DING extension
+
+v14:
+
+* Fix localization
 
 ## Credits
 

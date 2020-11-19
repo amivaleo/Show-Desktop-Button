@@ -1,12 +1,15 @@
 const {GObject, Gtk} = imports.gi;
+const ExtensionUtils = imports.misc.extensionUtils;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 
 const Tools = Me.imports.tools;
 const Settings = Tools.getSettings();
-const Gettext = Tools.getGettext();
+const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
 
-function init () {}
+function init () {
+    ExtensionUtils.initTranslations();
+}
 
 function buildPrefsWidget () {
 	
