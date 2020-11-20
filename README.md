@@ -12,10 +12,11 @@ You can automatically install the extension from the website (automatic installa
 
 **Manual installation:**
 
-* Download the zip file
-* Unzip it 
-* Put the folder `show-desktop-button@amivaleo` in `~/.local/share/gnome-shell/extensions/`
-* Restart the gnome shell environnment (reboot, logout and login again, or `alt+f2` then write `r` and press enter).
+* Open a terminal and give the command
+```
+$ https://github.com/amivaleo/Show-Desktop-Button.git ~/.local/share/gnome-shell/extensions/show-desktop-button@amivaleo
+```
+* Restart the gnome shell by rebooting or by logout&login or by pressing `alt+f2` then writing `r` and pressing enter.
 
 ## Translation
 
@@ -30,48 +31,48 @@ If you'd like to translate the extension in your native language, you can
 
 ## Version history
 
-v5:
+v14:
 
-* added support for gnome-shell 3.38
-* only unminimize those windows that weren't already minimized by the user (windows-like behaviour)
-* REMOVED FEATURE: the indicator will only appear on the right side of the panel
+* Fix localization
 
-v6:
+v13:
 
-* minor fixes so that, when the extension is disabled, no error is (should be?) displayed
+* Ignores docks, conky and DING extension
 
-v7:
+v12:
 
-* Added rough support for changing indicator position on the panel
+* Minor typo...
 
-v8:
+v11:
 
-* Restored old pref dialogue
+* Minor typo...
+
+v10:
+
+* Minor typo fixed
 
 v9:
 
 * Restored panel position feature
 * Modern pref dialog (contributions from [JustPerfection](https://gitlab.gnome.org/justperfection.channel))
 
-v10:
+v8:
 
-* Minor typo fixed
+* Restored old pref dialogue
 
-v11:
+v7:
 
-* Minor typo...
+* Added rough support for changing indicator position on the panel
 
-v12:
+v6:
 
-* Minor typo...
+* minor fixes so that, when the extension is disabled, no error is (should be?) displayed
 
-v13:
+v5:
 
-* Ignores docks, conky and DING extension
-
-v14:
-
-* Fix localization
+* added support for gnome-shell 3.38
+* only unminimize those windows that weren't already minimized by the user (windows-like behaviour)
+* REMOVED FEATURE: the indicator will only appear on the right side of the panel
 
 ## Credits
 
