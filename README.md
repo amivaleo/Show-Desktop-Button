@@ -2,7 +2,7 @@
 A button that hide/show all the open windows on desktop
 
 ## Installation
-You can automatically install the extension from the website (automatic installation) or you can download the repo files (manual installation) .
+You can automatically install the extension from the website (automatic installation) or you can download the repo files (manual installation).
 
 
 **Automatic installation (best option):**
