@@ -26,6 +26,7 @@ function toggleDesktop() {
 
 	let metaWorkspace = global.workspace_manager.get_active_workspace();
 	let windows = metaWorkspace.list_windows();
+	let wm_class;
 	
 	log("\n### " + ExtensionName + " debugging START ###");
 	
@@ -43,10 +44,15 @@ function toggleDesktop() {
 			// cyle through all windows
 			for ( let i = 0; i < windows.length; ++i ) {
 				
+				wm_class = windows[i].wm_class.toLowerCase();
+				if (windows[i].wm_class == null) {
+					wm_class = 'null';
+				}
+				
 				log("i: " + i +
 						"\ttitle: " + windows[i].title + 
 						"\twindow_type: " + windows[i].window_type + 
-						"\twm_class: " + windows[i].wm_class.toLowerCase());
+						"\twm_class: " + wm_class);
 
 				// if the window is already minimized or is a DESKTOP type
 				// or is the DING extension,
@@ -55,11 +61,30 @@ function toggleDesktop() {
 							windows[i].window_type == Meta.WindowType.DESKTOP ||
 							windows[i].window_type == Meta.WindowType.DOCK ||
 							windows[i].title.startsWith('DING') ||
-							windows[i].wm_class.toLowerCase() == 'conky' ||
+							wm_class == 'conky' ||
 							( windows[i].title.startsWith('@!') && windows[i].title.endsWith('BDH') ) ) {
 					ignoredWindows.push(windows[i]);
+
 					log('\t pushed into ignoredWindows: ' + windows[i].title);
-				
+					if (windows[i].minimized) {
+						log('\t because it was already minimized');
+					}
+					if (windows[i].window_type == Meta.WindowType.DESKTOP) {
+						log('\t because window_type == DESKTOP');
+					}
+					if (windows[i].window_type == Meta.WindowType.DOCK) {
+						log('\t because window_type == DOCK');
+					}
+					if (windows[i].title.startsWith('DING')) {
+						log('\t because name starts with DING');
+					}
+					if (wm_class == 'conky') {
+						log('\t because wm_class is conky');
+					}
+					if	( windows[i].title.startsWith('@!') && windows[i].title.endsWith('BDH') ) {
+						log('\t because title starts with @! and ends with BDH');
+					}
+					
 				// ... otherwise minimize that window
 				} else {
 					windows[i].minimize();
@@ -74,11 +99,16 @@ function toggleDesktop() {
 			// cyle through all windows
 			for ( let i = 0; i < windows.length; ++i ) {
 				
+				wm_class = windows[i].wm_class.toLowerCase();
+				if (windows[i].wm_class == null) {
+					wm_class = 'null';
+				}
+				
 				log("i: " + i +
 						"\ttitle: " + windows[i].title + 
 						"\twindow_type: " + windows[i].window_type + 
-						"\twm_class: " + windows[i].wm_class.toLowerCase());
-			
+						"\twm_class: " + wm_class);
+				
 				// check if the window was already minimized in the previous state
 				// since we don't want to uniminimize them, nor we want to do something
 				// to conky, desktop apps, ding, etc.
