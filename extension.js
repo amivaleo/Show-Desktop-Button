@@ -49,39 +49,49 @@ function toggleDesktop() {
 					wm_class = 'null';
 				}
 				
+				window_type = windows[i].window_type;
+				if (windows[i].window_type == null) {
+					window_type = 'null';
+				}
+				title = windows[i].title;
+				if (windows[i].title == null) {
+					title = 'null';
+				}
+				
 				log("i: " + i +
-						"\ttitle: " + windows[i].title + 
-						"\twindow_type: " + windows[i].window_type + 
+						"\ttitle: " + title + 
+						"\twindow_type: " + window_type + 
 						"\twm_class: " + wm_class);
 
 				// if the window is already minimized or is a DESKTOP type
 				// or is the DING extension,
 				// add it to a separate array 'ignoredWindows'...
 				if (windows[i].minimized ||
-							windows[i].window_type == Meta.WindowType.DESKTOP ||
-							windows[i].window_type == Meta.WindowType.DOCK ||
-							windows[i].title.startsWith('DING') ||
+							window_type == Meta.WindowType.DESKTOP ||
+							window_type == Meta.WindowType.DOCK ||
+							title.startsWith('DING') ||
+							wm_class.endsWith('notejot') ||
 							wm_class == 'conky' ||
-							( windows[i].title.startsWith('@!') && windows[i].title.endsWith('BDH') ) ) {
+							( title.startsWith('@!') && title.endsWith('BDH') ) ) {
 					ignoredWindows.push(windows[i]);
 
-					log('\t pushed into ignoredWindows: ' + windows[i].title);
+					log('\t pushed into ignoredWindows: ' + title);
 					if (windows[i].minimized) {
 						log('\t because it was already minimized');
 					}
-					if (windows[i].window_type == Meta.WindowType.DESKTOP) {
+					if (window_type == Meta.WindowType.DESKTOP) {
 						log('\t because window_type == DESKTOP');
 					}
-					if (windows[i].window_type == Meta.WindowType.DOCK) {
+					if (window_type == Meta.WindowType.DOCK) {
 						log('\t because window_type == DOCK');
 					}
-					if (windows[i].title.startsWith('DING')) {
+					if (title.startsWith('DING')) {
 						log('\t because name starts with DING');
 					}
 					if (wm_class == 'conky') {
 						log('\t because wm_class is conky');
 					}
-					if	( windows[i].title.startsWith('@!') && windows[i].title.endsWith('BDH') ) {
+					if	(title.startsWith('@!') && title.endsWith('BDH') ) {
 						log('\t because title starts with @! and ends with BDH');
 					}
 					
@@ -105,8 +115,8 @@ function toggleDesktop() {
 				}
 				
 				log("i: " + i +
-						"\ttitle: " + windows[i].title + 
-						"\twindow_type: " + windows[i].window_type + 
+						"\ttitle: " + title + 
+						"\twindow_type: " + window_type + 
 						"\twm_class: " + wm_class);
 				
 				// check if the window was already minimized in the previous state
@@ -115,7 +125,7 @@ function toggleDesktop() {
 				// it that's the case, splice that window from the array
 				for (let j = 0; j < ignoredWindows.length; j++) {
 					if (ignoredWindows[j] == windows[i]) {
-						log('\t this was in ignoredWindows: ' + windows[i].title);
+						log('\t this was in ignoredWindows: ' + title);
 						windows.splice(i, 1);
 					}
 				}
@@ -172,6 +182,7 @@ function init() {
 }
 
 function enable() {
+	ignoredWindows = [];
 	addButton();
 }
 
