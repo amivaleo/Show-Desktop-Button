@@ -1,7 +1,10 @@
 # Show-desktop-button
+
 A button that hide/show all the open windows on desktop
 
+
 ## Installation
+
 You can automatically install the extension from the website (automatic installation) or you can download the repo files (manual installation).
 
 
@@ -14,9 +17,10 @@ You can automatically install the extension from the website (automatic installa
 
 * Open a terminal and give the command
 ```
-$ https://github.com/amivaleo/Show-Desktop-Button.git ~/.local/share/gnome-shell/extensions/show-desktop-button@amivaleo
+$ git remote add origin https://github.com/amivaleo/Show-Desktop-Button.git ~/.local/share/gnome-shell/extensions/show-desktop-button@amivaleo
 ```
 * Restart the gnome shell by rebooting or by logout&login or by pressing `alt+f2` then writing `r` and pressing enter.
+
 
 ## Translation
 
@@ -28,6 +32,7 @@ If you'd like to translate the extension in your native language, you can
 * save and compile the translation
 * rename the resulting file with extension `.mo` to `show-desktop-button.mo`
 * send that file to me by opening an issue (in which you MUST specify the language short code, like `it_IT`, `es_ES`, `en_US`, etc) or by a pulling request
+
 
 ## Version history
 
