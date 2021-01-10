@@ -146,7 +146,7 @@ function toggleDesktop() {
 
 function getPanelButton() {
 
-	panelButton = new PanelMenu.Button(0.0, null, true);
+	panelButton = new PanelMenu.Button(0.0, `${ExtensionName}`, false);
 	
 	let icon = new St.Icon({
 		icon_name: 'user-home-symbolic',
