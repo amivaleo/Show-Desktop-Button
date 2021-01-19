@@ -21,6 +21,8 @@ $ git clone https://github.com/amivaleo/Show-Desktop-Button.git ~/.local/share/g
 ```
 * Restart the gnome shell by rebooting or by logout&login or by pressing `alt+f2` then writing `r` and pressing enter.
 
+* Enable the extension in Tweaks.
+
 
 ## Translation
 
