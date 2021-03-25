@@ -8,9 +8,10 @@
   "settings-schema": "org.gnome.shell.extensions.show-desktop-button",
   "shell-version": [
     "3.38",
-    "3.36"
+    "3.36",
+    "40.0"
   ],
   "url": "https://github.com/amivaleo/Show-Desktop-Button",
   "uuid": "show-desktop-button@amivaleo",
-  "version": 15
+  "version": 16
 }
