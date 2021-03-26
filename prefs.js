@@ -14,7 +14,6 @@ function init () {
 function buildPrefsWidget () {
 	
 	let widget = new MyPrefsWidget();
-	widget.show_all();
 	
 	return widget;
 }
@@ -33,27 +32,17 @@ const MyPrefsWidget = new GObject.Class({
 		builder.set_translation_domain(Me.metadata['gettext-domain']);
 		builder.add_from_file(Me.path + '/prefs.ui');
 		
-		this.connect('destroy', Gtk.main_quit);
+		let currentPosition = Settings.get_enum('panel-position');
+		let comboBox = builder.get_object("panelButtonPosition_combobox");
 		
-		let SignalHandler = {
+		comboBox.set_active(currentPosition);
 		
-			panelPositionHandler (w) {
-				log(w.get_active());
-				let value = w.get_active();
-				Settings.set_enum('panel-position', value);
-			}
-	
-		};
-		
-		builder.connect_signals_full( (builder, object, signal, handler) => {
-			object.connect( signal, SignalHandler[handler].bind(this) );
+		comboBox.connect("changed", (w) => {
+		    let value = w.get_active();
+		    Settings.set_enum('panel-position', value);
 		});
 		
-		let currentPosition = Settings.get_enum('panel-position');
-		builder.get_object("panelButtonPosition_combobox").set_active(currentPosition);
-		
-		this.add(builder.get_object('main_prefs'));
+		this.set_child(builder.get_object('main_prefs'));
 	}
 
 });
-
