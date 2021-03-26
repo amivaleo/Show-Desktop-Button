@@ -38,6 +38,10 @@ If you'd like to translate the extension in your native language, you can
 
 ## Version history
 
+v18:
+
+* Gnome 40 port by [JustPerfection](https://github.com/amivaleo/Show-Desktop-Button/pull/20) 
+
 v15:
 
 * Extend support to gnome 3.36
@@ -65,7 +69,7 @@ v10:
 v9:
 
 * Restored panel position feature
-* Modern pref dialog (contributions from [JustPerfection](https://gitlab.gnome.org/justperfection.channel))
+* Modern pref dialog (contributions by [JustPerfection](https://gitlab.gnome.org/justperfection.channel))
 
 v8:
 
