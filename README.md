@@ -17,7 +17,7 @@ You can automatically install the extension from the website (automatic installa
 
 * Open a terminal and give the command
 ```
-$ git clone https://github.com/amivaleo/Show-Desktop-Button.git ~/.local/share/gnome-shell/extensions/show-desktop-button@amivaleo
+git clone https://github.com/amivaleo/Show-Desktop-Button.git ~/.local/share/gnome-shell/extensions/show-desktop-button@amivaleo
 ```
 * Restart the gnome shell by rebooting or by logout&login or by pressing `alt+f2` then writing `r` and pressing enter.
 
