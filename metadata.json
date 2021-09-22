@@ -4,12 +4,14 @@
   "extension-id": "show-desktop-button",
   "gettext-domain": "show-desktop-button",
   "localedir": "/usr/share/locale",
+  "debug": true,
   "name": "Show Desktop Button",
   "settings-schema": "org.gnome.shell.extensions.show-desktop-button",
   "shell-version": [
-    "40"
+    "40",
+    "41"
   ],
   "url": "https://github.com/amivaleo/Show-Desktop-Button",
   "uuid": "show-desktop-button@amivaleo",
-  "version": 16
+  "version": 18
 }
