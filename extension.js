@@ -1,193 +1,288 @@
-const {St, Shell, Atk} = imports.gi;
+const {St} = imports.gi;
 const Main = imports.ui.main;
-const Util = imports.misc.util;
 const Meta = imports.gi.Meta;
 const PanelMenu = imports.ui.panelMenu;
-const Me = imports.misc.extensionUtils.getCurrentExtension();
 
-const Tools = Me.imports.tools;
-const Settings = Tools.getSettings();
-const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
-const _ = Gettext.gettext;
+const ExtensionUtils = imports.misc.extensionUtils;
+const Me = ExtensionUtils.getCurrentExtension();
 
-const ExtensionName = Me.metadata.name;
-const ExtensionVersion = Me.metadata.version;
+/**
+ * toggle status
+ *
+ * @member {Object}
+ */
+const TOGGLE_STATUS = {
+    UNMINIMIZED: 0,
+    MINIMIZED: 1,
+};
 
+/**
+ * current toggle status
+ *
+ * @member {number}
+ */
+let toggleStatus = TOGGLE_STATUS.UNMINIMIZED;
+
+/**
+ * extension gsettings
+ *
+ * @member {Gio.Settings}
+ */
+let Settings;
+
+/**
+ * extension name
+ *
+ * @member {string}
+ */
+const extensionName = Me.metadata.name;
+
+/**
+ * panel menu button
+ *
+ * @member {PanelMenu.Button}
+ */
 let panelButton;
 
-// the panelButton works as a toggle button.
-// the two states on/off correspond to panelButtonStatus = true/false
-// true :: when the button has minimized the windows
-let panelButtonStatus;
+/**
+ * windows that needs to be ignored in unminimize
+ *
+ * @member {Array}
+ */
 let ignoredWindows = [];
 
+/**
+ * log debug
+ *
+ * @param {string} message text that needs to be logged
+ *
+ * @returns {void}
+ */
+function logDebug(message) {
+    if (Me.metadata.debug)
+        log(message);
+}
 
+/**
+ * unminimize windows
+ *
+ * @param {Array} windows array of windows from metaWorkspace.list_windows()
+ *
+ * @returns {void}
+ */
+function unminimizeWindows(windows) {
+
+    for (let i = 0; i < windows.length; ++i) {
+
+        let wm_classInitial = windows[i].wm_class ?? '';
+        let wm_class = wm_classInitial.toLowerCase();
+        let window_type = windows[i].window_type ?? '';
+        let title = windows[i].title ?? '';
+
+        logDebug(`unminimize i: ${i}`);
+        logDebug(`\t title: ${title}`);
+        logDebug(`\t window_type: ${window_type}`);
+        logDebug(`\t wm_class: ${wm_class}`);
+
+        // check if the window was already minimized in the previous state
+        // since we don't want to uniminimize them, nor we want to do something
+        // to conky, desktop apps, ding, etc.
+        // it that's the case, splice that window from the array
+        for (let j = 0; j < ignoredWindows.length; j++) {
+            if (ignoredWindows[j] === windows[i]) {
+                logDebug(`\t this was in ignoredWindows: ${title}`);
+                windows.splice(i, 1);
+            }
+        }
+    }
+
+    // after the pruning, unminimize only those windows in the 'windows' array
+    for (let i = 0; i < windows.length; ++i) {
+        windows[i].unminimize();
+    }
+
+    // unminimze doesn't need the ignored windows anymore
+    ignoredWindows = [];
+}
+
+/**
+ * minimize windows
+ *
+ * @param {Array} windows array of windows from metaWorkspace.list_windows()
+ *
+ * @returns {void}
+ */
+function minimizeWindows(windows) {
+
+    for (let i = 0; i < windows.length; ++i) {
+
+        let wm_classInitial = windows[i].wm_class ?? '';
+        let wm_class = wm_classInitial.toLowerCase();
+        let window_type = windows[i].window_type ?? '';
+        let title = windows[i].title ?? '';
+
+        logDebug(`minimize i: ${i}`);
+        logDebug(`\t title: ${title}`);
+        logDebug(`\t window_type: ${window_type}`);
+        logDebug(`\t wm_class: ${wm_class}`);
+
+        if (windows[i].minimized) {
+            logDebug(`\t ${title} ignored: it was already minimized`);
+            ignoredWindows.push(windows[i]);
+            continue;
+        }
+
+        if (window_type === Meta.WindowType.DESKTOP) {
+            logDebug(`\t ${title} ignored: window_type is DESKTOP`);
+            ignoredWindows.push(windows[i]);
+            continue;
+        }
+
+        if (window_type === Meta.WindowType.DOCK) {
+            logDebug(`\t ${title} ignored: window_type is DOCK`);
+            ignoredWindows.push(windows[i]);
+            continue;
+        }
+
+        if (title.startsWith('DING')) {
+            logDebug(`\t ${title} ignored: name starts with DING`);
+            ignoredWindows.push(windows[i]);
+            continue;
+        }
+
+        if (wm_class.endsWith('notejot')) {
+            logDebug(`\t ${title} ignored: name ends with notejot`);
+            ignoredWindows.push(windows[i]);
+            continue;
+        }
+
+        if (wm_class === 'conky') {
+            logDebug(`\t ${title} ignored: wm_class is conky`);
+            ignoredWindows.push(windows[i]);
+            continue;
+        }
+
+        if (title.startsWith('@!') && title.endsWith('BDH')) {
+            logDebug(`\t ${title} ignored: title starts with @! and ends with BDH`);
+            ignoredWindows.push(windows[i]);
+            continue;
+        }
+
+        windows[i].minimize();
+    }
+}
+
+/**
+ * toggle desktop windows
+ *
+ * @returns {void}
+ */
 function toggleDesktop() {
 
-	let metaWorkspace = global.workspace_manager.get_active_workspace();
-	let windows = metaWorkspace.list_windows();
-	let wm_class;
-	
-	log("\n### " + ExtensionName + " debugging START ###");
-	
-	log('panelButtonStatus: ' + panelButtonStatus);
-	
-	// if the user click on the panelButton while the overview
-	// is open -> do nothing.
-	if (!Main.overview.visible) {
-	
-		// if panelButtonStatus == false <=> the button is in status off...
-		// this is the MINIMIZING action =>
-		// panelButtonStatus WAS false and WILL BE true
-		if (panelButtonStatus == false) {
-			
-			// cyle through all windows
-			for ( let i = 0; i < windows.length; ++i ) {
-				
-				wm_class = windows[i].wm_class.toLowerCase();
-				if (windows[i].wm_class == null) {
-					wm_class = 'null';
-				}
-				
-				window_type = windows[i].window_type;
-				if (windows[i].window_type == null) {
-					window_type = 'null';
-				}
-				title = windows[i].title;
-				if (windows[i].title == null) {
-					title = 'null';
-				}
-				
-				log("i: " + i +
-						"\ttitle: " + title + 
-						"\twindow_type: " + window_type + 
-						"\twm_class: " + wm_class);
+    let metaWorkspace = global.workspace_manager.get_active_workspace();
+    let windows = metaWorkspace.list_windows();
 
-				// if the window is already minimized or is a DESKTOP type
-				// or is the DING extension,
-				// add it to a separate array 'ignoredWindows'...
-				if (windows[i].minimized ||
-							window_type == Meta.WindowType.DESKTOP ||
-							window_type == Meta.WindowType.DOCK ||
-							title.startsWith('DING') ||
-							wm_class.endsWith('notejot') ||
-							wm_class == 'conky' ||
-							( title.startsWith('@!') && title.endsWith('BDH') ) ) {
-					ignoredWindows.push(windows[i]);
+    // do not toggle when overview is open
+    if (Main.overview.visible) {
+        return;
+    }
 
-					log('\t pushed into ignoredWindows: ' + title);
-					if (windows[i].minimized) {
-						log('\t because it was already minimized');
-					}
-					if (window_type == Meta.WindowType.DESKTOP) {
-						log('\t because window_type == DESKTOP');
-					}
-					if (window_type == Meta.WindowType.DOCK) {
-						log('\t because window_type == DOCK');
-					}
-					if (title.startsWith('DING')) {
-						log('\t because name starts with DING');
-					}
-					if (wm_class == 'conky') {
-						log('\t because wm_class is conky');
-					}
-					if	(title.startsWith('@!') && title.endsWith('BDH') ) {
-						log('\t because title starts with @! and ends with BDH');
-					}
-					
-				// ... otherwise minimize that window
-				} else {
-					windows[i].minimize();
-				}
-			}
-		
-		// if panelButtonStatus == true <=> the button is in status on...
-		// this is the UNMINIMIZING action =>
-		// panelButtonStatus WAS true and WILL BE false
-		} else if (panelButtonStatus == true) {
-			
-			// cyle through all windows
-			for ( let i = 0; i < windows.length; ++i ) {
-				
-				wm_class = windows[i].wm_class.toLowerCase();
-				if (windows[i].wm_class == null) {
-					wm_class = 'null';
-				}
-				
-				log("i: " + i +
-						"\ttitle: " + title + 
-						"\twindow_type: " + window_type + 
-						"\twm_class: " + wm_class);
-				
-				// check if the window was already minimized in the previous state
-				// since we don't want to uniminimize them, nor we want to do something
-				// to conky, desktop apps, ding, etc.
-				// it that's the case, splice that window from the array
-				for (let j = 0; j < ignoredWindows.length; j++) {
-					if (ignoredWindows[j] == windows[i]) {
-						log('\t this was in ignoredWindows: ' + title);
-						windows.splice(i, 1);
-					}
-				}
-			}
-			
-			// after the pruning, unminimize only those windows in the 'windows' array
-			for ( let i = 0; i < windows.length; ++i ) {
-				windows[i].unminimize();
-			}
-		
-			// empty the separate array 'ignoredWindows'
-			ignoredWindows = [];
-		}
-		
-		panelButtonStatus = !panelButtonStatus;
-	}
+    if (toggleStatus === TOGGLE_STATUS.UNMINIMIZED) {
+        minimizeWindows(windows);
+        toggleStatus = TOGGLE_STATUS.MINIMIZED;
+    } else if (toggleStatus === TOGGLE_STATUS.MINIMIZED) {
+        unminimizeWindows(windows);
+        toggleStatus = TOGGLE_STATUS.UNMINIMIZED;
+    }
 }
 
+/**
+ * reset toggle status
+ *
+ * @returns {void}
+ */
+function resetToggleStatus() {
+    toggleStatus = TOGGLE_STATUS.UNMINIMIZED;
+    ignoredWindows = [];
+}
+
+/**
+ * get panel button
+ *
+ * @returns {PanelMenu.Button}
+ */
 function getPanelButton() {
 
-	panelButton = new PanelMenu.Button(0.0, `${ExtensionName}`, false);
-	
-	let icon = new St.Icon({
-		icon_name: 'user-home-symbolic',
-		style_class: 'system-status-icon',
-	});
-	
-	panelButton.add_child(icon);
-	
-	panelButtonStatus = false;
-	panelButton.connect('button-press-event', toggleDesktop);
-	
-	return panelButton;
+    panelButton = new PanelMenu.Button(0.0, `${extensionName}`, false);
+
+    let icon = new St.Icon({
+        icon_name: 'user-home-symbolic',
+        style_class: 'system-status-icon',
+    });
+
+    panelButton.add_child(icon);
+
+    panelButton.connect('button-press-event', toggleDesktop);
+
+    return panelButton;
 }
 
+/**
+ * add button to panel
+ *
+ * @returns {void}
+ */
 function addButton() {
-
-	let role = `${ExtensionName} Indicator`;
-	let positions = ['left', 'center', 'right'];	
-	
-	Main.panel.addToStatusArea(role, getPanelButton(), 1, positions[Settings.get_enum('panel-position')]);
+    let role = `${extensionName} Indicator`;
+    let positions = ['left', 'center', 'right'];
+    let position = Settings.get_enum('panel-position');
+    Main.panel.addToStatusArea(role, getPanelButton(), 1, positions[position]);
 }
 
+/**
+ * remove button from panel
+ *
+ * @returns {void}
+ */
 function removeButton() {
-	panelButton.destroy();
-	panelButton = null;
+    panelButton.destroy();
+    panelButton = null;
 }
 
+/**
+ * initiate extension
+ *
+ * @returns {void}
+ */
 function init() {
-	Settings.connect('changed', (s) => {
-		removeButton();
-		addButton();
-  });
 }
 
+/**
+ * enable extension
+ *
+ * @returns {void}
+ */
 function enable() {
-	ignoredWindows = [];
-	addButton();
+
+    Settings = ExtensionUtils.getSettings();
+
+    Settings.connect('changed::panel-position', () => {
+        removeButton();
+        addButton();
+    });
+
+    resetToggleStatus();
+    addButton();
 }
 
+/**
+ * disable extension
+ *
+ * @returns {void}
+ */
 function disable() {
-	ignoredWindows = null;
-	panelButtonStatus = null;
-	removeButton();
+    resetToggleStatus();
+    ignoredWindows = null;
+    removeButton();
 }
+
