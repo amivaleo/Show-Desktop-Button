@@ -2,19 +2,13 @@ const {Gtk} = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 
-/**
- * prefs initiation
- *
- * @returns {void}
+/* prefs initiation
  */
 function init() {
     ExtensionUtils.initTranslations();
 }
 
-/**
- * prefs widget
- *
- * @returns {Gtk.Widget}
+/* prefs widget
  */
 function buildPrefsWidget() {
 
