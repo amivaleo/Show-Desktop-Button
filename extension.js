@@ -6,9 +6,7 @@ const PanelMenu = imports.ui.panelMenu;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-/**
- * toggle status
- *
+/* toggle status
  * @member {Object}
  */
 const TOGGLE_STATUS = {
@@ -16,59 +14,41 @@ const TOGGLE_STATUS = {
     MINIMIZED: 1,
 };
 
-/**
- * current toggle status
- *
+/* current toggle status
  * @member {number}
  */
 let toggleStatus = TOGGLE_STATUS.UNMINIMIZED;
 
-/**
- * extension gsettings
- *
+/* extension gsettings
  * @member {Gio.Settings}
  */
 let Settings;
 
-/**
- * extension name
- *
+/* extension name
  * @member {string}
  */
 const extensionName = Me.metadata.name;
 
-/**
- * panel menu button
- *
+/* panel menu button
  * @member {PanelMenu.Button}
  */
 let panelButton;
 
-/**
- * windows that needs to be ignored in unminimize
- *
+/* windows that needs to be ignored in unminimize
  * @member {Array}
  */
 let ignoredWindows = [];
 
-/**
- * log debug
- *
+/* log debug
  * @param {string} message text that needs to be logged
- *
- * @returns {void}
  */
 function logDebug(message) {
     if (Me.metadata.debug)
         log(message);
 }
 
-/**
- * unminimize windows
- *
+/* unminimize windows
  * @param {Array} windows array of windows from metaWorkspace.list_windows()
- *
- * @returns {void}
  */
 function unminimizeWindows(windows) {
 
@@ -105,12 +85,8 @@ function unminimizeWindows(windows) {
     ignoredWindows = [];
 }
 
-/**
- * minimize windows
- *
+/* minimize windows
  * @param {Array} windows array of windows from metaWorkspace.list_windows()
- *
- * @returns {void}
  */
 function minimizeWindows(windows) {
 
@@ -172,10 +148,7 @@ function minimizeWindows(windows) {
     }
 }
 
-/**
- * toggle desktop windows
- *
- * @returns {void}
+/* toggle desktop windows
  */
 function toggleDesktop() {
 
@@ -196,20 +169,14 @@ function toggleDesktop() {
     }
 }
 
-/**
- * reset toggle status
- *
- * @returns {void}
+/* reset toggle status
  */
 function resetToggleStatus() {
     toggleStatus = TOGGLE_STATUS.UNMINIMIZED;
     ignoredWindows = [];
 }
 
-/**
- * get panel button
- *
- * @returns {PanelMenu.Button}
+/* get panel button
  */
 function getPanelButton() {
 
@@ -227,10 +194,7 @@ function getPanelButton() {
     return panelButton;
 }
 
-/**
- * add button to panel
- *
- * @returns {void}
+/* add button to panel
  */
 function addButton() {
     let role = `${extensionName} Indicator`;
@@ -239,28 +203,19 @@ function addButton() {
     Main.panel.addToStatusArea(role, getPanelButton(), 1, positions[position]);
 }
 
-/**
- * remove button from panel
- *
- * @returns {void}
+/* remove button from panel
  */
 function removeButton() {
     panelButton.destroy();
     panelButton = null;
 }
 
-/**
- * initiate extension
- *
- * @returns {void}
+/* initiate extension
  */
 function init() {
 }
 
-/**
- * enable extension
- *
- * @returns {void}
+/* enable extension
  */
 function enable() {
 
@@ -275,14 +230,10 @@ function enable() {
     addButton();
 }
 
-/**
- * disable extension
- *
- * @returns {void}
+/* disable extension
  */
 function disable() {
     resetToggleStatus();
     ignoredWindows = null;
     removeButton();
 }
-
