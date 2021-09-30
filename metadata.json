@@ -4,7 +4,7 @@
   "extension-id": "show-desktop-button",
   "gettext-domain": "show-desktop-button",
   "localedir": "/usr/share/locale",
-  "debug": true,
+  "debug": false,
   "name": "Show Desktop Button",
   "settings-schema": "org.gnome.shell.extensions.show-desktop-button",
   "shell-version": [
