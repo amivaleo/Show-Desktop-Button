@@ -17,9 +17,11 @@ You can automatically install the extension from the website (automatic installa
 
 * Open a terminal and give the command
 ```
-$ git clone https://github.com/amivaleo/Show-Desktop-Button.git ~/.local/share/gnome-shell/extensions/show-desktop-button@amivaleo
+git clone https://github.com/amivaleo/Show-Desktop-Button.git ~/.local/share/gnome-shell/extensions/show-desktop-button@amivaleo
 ```
 * Restart the gnome shell by rebooting or by logout&login or by pressing `alt+f2` then writing `r` and pressing enter.
+
+* Enable the extension in Tweaks.
 
 
 ## Translation
@@ -35,6 +37,14 @@ If you'd like to translate the extension in your native language, you can
 
 
 ## Version history
+
+v19:
+
+* Gnome 41 port by [JustPerfection](https://github.com/amivaleo/Show-Desktop-Button/pull/23)
+
+v18:
+
+* Gnome 40 port by [JustPerfection](https://github.com/amivaleo/Show-Desktop-Button/pull/20)
 
 v15:
 
@@ -63,7 +73,7 @@ v10:
 v9:
 
 * Restored panel position feature
-* Modern pref dialog (contributions from [JustPerfection](https://gitlab.gnome.org/justperfection.channel))
+* Modern pref dialog (contributions by [JustPerfection](https://gitlab.gnome.org/justperfection.channel))
 
 v8:
 
