@@ -144,8 +144,8 @@ function minimizeWindows(windows) {
             continue;
         }
 
-        if (title.startsWith('@!') && title.endsWith('BDH')) {
-            logDebug(`\t ${title} ignored: title starts with @! and ends with BDH`);
+        if (title.startsWith('@!') && title.endsWith('BDHF')) {
+            logDebug(`\t ${title} ignored: title starts with @! and ends with BDHF`);
             ignoredWindows.push(windows[i]);
             continue;
         }
