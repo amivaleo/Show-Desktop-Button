@@ -137,15 +137,16 @@ function minimizeWindows(windows) {
             ignoredWindows.push(windows[i]);
             continue;
         }
-        
+
         if (wm_class === 'Gjs') {
             logDebug(`\t ${title} ignored: wm_class is Gjs`);
             ignoredWindows.push(windows[i]);
             continue;
         }
 
-        if (title.startsWith('@!') && title.endsWith('BDHF')) {
-            logDebug(`\t ${title} ignored: title starts with @! and ends with BDHF`);
+        if (title.startsWith('@!')
+                && (title.endsWith('BDH') || title.endsWith('BDHF'))) {
+            logDebug(`\t ${title} ignored: title starts with @! and ends with BDH or BDHF`);
             ignoredWindows.push(windows[i]);
             continue;
         }
