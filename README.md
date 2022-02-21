@@ -40,7 +40,7 @@ If you'd like to translate the extension in your native language, you can
 
 v22:
 
-* Now works fine with [DING extension](https://gitlab.com/rastersoft/desktop-icons-ng), fixed by @proninyaroslav
+* Now works fine with [DING extension](https://gitlab.com/rastersoft/desktop-icons-ng), fixed by [proninyaroslav](https://github.com/proninyaroslav)
 
 v19:
 
