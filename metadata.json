@@ -9,7 +9,8 @@
   "settings-schema": "org.gnome.shell.extensions.show-desktop-button",
   "shell-version": [
     "40",
-    "41"
+    "41",
+    "42"
   ],
   "url": "https://github.com/amivaleo/Show-Desktop-Button",
   "uuid": "show-desktop-button@amivaleo",
