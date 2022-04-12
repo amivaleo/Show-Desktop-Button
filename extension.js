@@ -242,5 +242,6 @@ function enable() {
 function disable() {
     resetToggleStatus();
     ignoredWindows = null;
+    Settings = null;
     removeButton();
 }
