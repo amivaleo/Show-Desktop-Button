@@ -38,6 +38,10 @@ If you'd like to translate the extension in your native language, you can
 
 ## Version history
 
+v24:
+
+* Added Settings = null in "disable"
+
 v23:
 
 * Added support to GNOME 42. Many thanks to [xiaozhangup](https://github.com/amivaleo/Show-Desktop-Button/issues?q=is%3Aissue+author%3Axiaozhangup)
