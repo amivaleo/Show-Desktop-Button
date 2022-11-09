@@ -2,10 +2,6 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
-msgid ""
-msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-19 10:08+0100\n"
@@ -17,22 +13,30 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: prefs.ui:41
+#: prefs.ui:42
 msgid "Set the position of the indicator on the top panel"
 msgstr ""
 
-#: prefs.ui:42
+#: prefs.ui:43
 msgid "Indicator position on panel"
 msgstr ""
 
-#: prefs.ui:57
+#: prefs.ui:53
+msgid "Far left"
+msgstr ""
+
+#: prefs.ui:54
 msgid "Left"
 msgstr ""
 
-#: prefs.ui:58
+#: prefs.ui:55
 msgid "Center"
 msgstr ""
 
-#: prefs.ui:59
+#: prefs.ui:56
 msgid "Right"
+msgstr ""
+
+#: prefs.ui:57
+msgid "Far right"
 msgstr ""

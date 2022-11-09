@@ -38,6 +38,10 @@ If you'd like to translate the extension in your native language, you can
 
 ## Version history
 
+v28:
+
+* Added "Far left" and "Far right" for the indicator's position
+
 v27:
 
 * Fixed error in pruneWindows(windows)
