@@ -38,6 +38,10 @@ If you'd like to translate the extension in your native language, you can
 
 ## Version history
 
+v29:
+
+* Removing unnecessary files
+
 v28:
 
 * Added "Far left" and "Far right" for the indicator's position
