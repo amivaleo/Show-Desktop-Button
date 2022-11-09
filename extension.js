@@ -100,7 +100,7 @@ function pruneWindows(windows) {
 	for (let i = 0; i < windows.length; ++i) {
 		for (let j = 0; j < ignoredWindows.length; j++) {
 			if (ignoredWindows[j] === windows[i]) {
-				logDebug(`\t this was in ignoredWindows: ${title}`);
+				logDebug(`\t this was in ignoredWindows: ${windows[i].title}`);
 				windows.splice(i, 1);
 			}
 		}
