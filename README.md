@@ -38,6 +38,10 @@ If you'd like to translate the extension in your native language, you can
 
 ## Version history
 
+v27:
+
+* Fixed error in pruneWindows(windows)
+
 v26:
 
 * New algorithm: if you have at least one unminimized window, the extension will minimize it. Otherwise, if all your windows are minimized, the extension will unminimize them all.
