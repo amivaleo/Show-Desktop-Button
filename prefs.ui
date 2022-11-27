@@ -48,13 +48,14 @@
                     <child>
                       <object class="GtkComboBoxText" id="panelButtonPosition_combobox">
                         <property name="visible">True</property>
-                        <property name="active">3</property>
+                        <property name="active">4</property>
                         <items>
                           <item id="0" translatable="yes">Far left</item>
                           <item id="1" translatable="yes">Left</item>
-                          <item id="2" translatable="yes">Center</item>
-                          <item id="3" translatable="yes">Right</item>
-                          <item id="4" translatable="yes">Far right</item>
+                          <item id="2" translatable="yes">Center-left</item>
+                          <item id="3" translatable="yes">Center-right</item>
+                          <item id="4" translatable="yes">Right</item>
+                          <item id="5" translatable="yes">Far right</item>
                         </items>
                       </object>
                     </child>
