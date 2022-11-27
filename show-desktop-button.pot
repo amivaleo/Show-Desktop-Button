@@ -30,13 +30,17 @@ msgid "Left"
 msgstr ""
 
 #: prefs.ui:55
-msgid "Center"
+msgid "Center-left"
 msgstr ""
 
 #: prefs.ui:56
-msgid "Right"
+msgid "Center-right"
 msgstr ""
 
 #: prefs.ui:57
+msgid "Right"
+msgstr ""
+
+#: prefs.ui:58
 msgid "Far right"
 msgstr ""
