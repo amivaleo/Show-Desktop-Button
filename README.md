@@ -38,6 +38,10 @@ If you'd like to translate the extension in your native language, you can
 
 ## Version history
 
+v31:
+
+* Added translations into a few languages (DeepL)
+
 v30:
 
 * Added "Center-right" for the indicator's position
