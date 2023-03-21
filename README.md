@@ -38,6 +38,10 @@ If you'd like to translate the extension in your native language, you can
 
 ## Version history
 
+v32:
+
+* Extended support to Gnome 44
+
 v31:
 
 * Added translations into a few languages (DeepL)
