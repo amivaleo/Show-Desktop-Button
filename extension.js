@@ -10,27 +10,25 @@
 
 // If you want to debug the extension,
 
-const {St} = imports.gi;
-const Main = imports.ui.main;
-const Meta = imports.gi.Meta;
-const PanelMenu = imports.ui.panelMenu;
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-const extensionName = Me.metadata.name;
+import St from 'gi://St';
+import Meta from 'gi://Meta';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
+import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 const TOGGLE_STATUS = {
 	UNMINIMIZE: 0,
 	MINIMIZE: 1,
 };
 
+let extensionName;
 let toggleStatus = TOGGLE_STATUS.UNMINIMIZE;
 let Settings;
 let panelButton;
 let ignoredWindows = [];
 
 function logDebug(message) {
-	if (Me.metadata.debug)
-		log(message);
+	console.debug(message);
 }
 
 /* make a list of all open windows
@@ -208,29 +206,26 @@ function removeButton() {
 	panelButton = null;
 }
 
-/* initiate extension
- */
-function init() {
-}
-
-/* enable extension
- */
-function enable() {
-	Settings = ExtensionUtils.getSettings();
-	Settings.connect('changed::panel-position', () => {
-		removeButton();
+export default class extends Extension {
+	/* enable extension
+	*/
+	enable() {
+		extensionName = this.metadata.name;
+		Settings = this.getSettings();
+		Settings.connect('changed::panel-position', () => {
+			removeButton();
+			addButton();
+		});
+		resetToggleStatus();
 		addButton();
-	});
-	resetToggleStatus();
-	addButton();
-}
+	}
 
-/* disable extension
- */
-function disable() {
-	resetToggleStatus();
-	ignoredWindows = null;
-	Settings = null;
-	removeButton();
+	/* disable extension
+	*/
+	disable() {
+		resetToggleStatus();
+		ignoredWindows = [];
+		Settings = null;
+		removeButton();
+	}
 }
-

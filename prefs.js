@@ -1,32 +1,27 @@
-const {Gtk} = imports.gi;
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = imports.misc.extensionUtils.getCurrentExtension();
+import Gtk from 'gi://Gtk';
+import {ExtensionPreferences} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-/* prefs initiation
- */
-function init() {
-    ExtensionUtils.initTranslations();
-}
+export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
+    /* prefs widget
+    */
+    fillPreferencesWindow(window) {
 
-/* prefs widget
- */
-function buildPrefsWidget() {
+        let settings = this.getSettings();
 
-    let settings = ExtensionUtils.getSettings();
+        let builder = new Gtk.Builder();
+        builder.set_translation_domain(this.metadata['gettext-domain']);
+        builder.add_from_file(this.dir.get_child('prefs.ui').get_path());
 
-    let builder = new Gtk.Builder();
-    builder.set_translation_domain(Me.metadata['gettext-domain']);
-    builder.add_from_file(Me.dir.get_child('prefs.ui').get_path());
+        let panelPosition = settings.get_enum('panel-position');
+        let comboRow = builder.get_object('panel_button_position');
 
-    let panelPosition = settings.get_enum('panel-position');
-    let comboBox = builder.get_object('panelButtonPosition_combobox');
+        comboRow.set_selected(panelPosition);
 
-    comboBox.set_active(panelPosition);
+        comboRow.connect('notify::selected-item', w => {
+            let value = w.get_selected();
+            settings.set_enum('panel-position', value);
+        });
 
-    comboBox.connect('changed', w => {
-        let value = w.get_active();
-        settings.set_enum('panel-position', value);
-    });
-
-    return builder.get_object('main_prefs');
+        window.add(builder.get_object('position_page'));
+    }
 }
