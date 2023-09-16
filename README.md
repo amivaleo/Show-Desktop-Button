@@ -38,6 +38,10 @@ If you'd like to translate the extension in your native language, you can
 
 ## Version history
 
+v33:
+
+* Gnome 45 port by [JustPerfection](https://github.com/amivaleo/Show-Desktop-Button/pull/23)
+
 v32:
 
 * Extended support to Gnome 44
