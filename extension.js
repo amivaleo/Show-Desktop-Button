@@ -36,10 +36,10 @@ function logDebug(message) {
  */
 function populateIgnoredWindows(windows) {
 	for (let i = 0; i < windows.length; ++i) {
+		let title = windows[i].title ?? '';
+		let window_type = windows[i].window_type ?? '';
 		let wm_classInitial = windows[i].wm_class ?? '';
 		let wm_class = wm_classInitial.toLowerCase();
-		let window_type = windows[i].window_type ?? '';
-		let title = windows[i].title ?? '';
 		logDebug(`minimize i: ${i}`);
 		logDebug(`\t title: ${title}`);
 		logDebug(`\t window_type: ${window_type}`);
@@ -57,6 +57,12 @@ function populateIgnoredWindows(windows) {
 			continue;
 		}
 
+		if (window_type === Meta.WindowType.MODAL_DIALOG) {
+			logDebug(`\t ${title} ignored: window_type is MODAL DIALOG`);
+			ignoredWindows.push(windows[i]);
+			continue;
+		}
+		
 		if (title.startsWith('DING')) {
 			logDebug(`\t ${title} ignored: name starts with DING`);
 			ignoredWindows.push(windows[i]);
