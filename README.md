@@ -38,6 +38,10 @@ If you'd like to translate the extension in your native language, you can
 
 ## Version history
 
+v35:
+
+* Extended support to Gnome 46 by [nater1983](https://github.com/amivaleo/Show-Desktop-Button/pull/45)
+
 v34:
 
 * Bug fix realted to modal dialog
