@@ -38,6 +38,10 @@ If you'd like to translate the extension in your native language, you can
 
 ## Version history
 
+v36:
+
+* Extended support to Gnome 47 by [nater1983](https://github.com/amivaleo/Show-Desktop-Button/pull/49)
+
 v35:
 
 * Extended support to Gnome 46 by [nater1983](https://github.com/amivaleo/Show-Desktop-Button/pull/45)
