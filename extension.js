@@ -187,7 +187,7 @@ function resetToggleStatus() {
 function getPanelButton() {
 	panelButton = new PanelMenu.Button(0.0, `${extensionName}`, false);
 	let icon = new St.Icon({
-		icon_name: 'user-home-symbolic',
+		icon_name: Settings.get_string('indicator-icon-name'),
 		style_class: 'system-status-icon',
 	});
 	panelButton.add_child(icon);
@@ -201,7 +201,7 @@ function addButton() {
 	let role = `${extensionName} Indicator`;
 	let position = ['left', 'left', 'center', 'center', 'right', 'right'];
 	let qualifier = [0, 1, 0, 1, 1, -1];
-	let index = Settings.get_enum('panel-position');
+	let index = Settings.get_enum('indicator-position');
 	Main.panel.addToStatusArea(role, getPanelButton(), qualifier[index], position[index]);
 }
 
@@ -218,8 +218,12 @@ export default class extends Extension {
 	enable() {
 		extensionName = this.metadata.name;
 		Settings = this.getSettings();
-		Settings.connect('changed::panel-position', () => {
+		Settings.connect('changed::indicator-position', () => {
 			removeButton();
+			addButton();
+		});
+		Settings.connect('changed::indicator-icon-name', () => {
+            removeButton();
 			addButton();
 		});
 		resetToggleStatus();

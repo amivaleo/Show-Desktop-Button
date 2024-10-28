@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="show-desktop-button">
-  
-  <enum id="org.gnome.shell.extensions.show-desktop-button.panel-position">
-    <value value="0" nick="LEFT_END"/>
-    <value value="1" nick="LEFT"/>
-    <value value="2" nick="CENTER_LEFT"/>
-    <value value="3" nick="CENTER_RIGHT"/>
-    <value value="4" nick="RIGHT"/>
-    <value value="5" nick="RIGHT_END"/>
-  </enum>
-  
-	<schema path="/org/gnome/shell/extensions/show-desktop-button/"
-	  id="org.gnome.shell.extensions.show-desktop-button">
-
-		<key name="panel-position"
-		  enum="org.gnome.shell.extensions.show-desktop-button.panel-position">
+	
+	<enum id="org.gnome.shell.extensions.show-desktop-button.indicator-position">
+		<value value="0" nick="LEFT_END"/>
+		<value value="1" nick="LEFT"/>
+		<value value="2" nick="CENTER_LEFT"/>
+		<value value="3" nick="CENTER_RIGHT"/>
+		<value value="4" nick="RIGHT"/>
+		<value value="5" nick="RIGHT_END"/>
+	</enum>
+	
+	<schema path="/org/gnome/shell/extensions/show-desktop-button/" id="org.gnome.shell.extensions.show-desktop-button">
+		
+		<key name="indicator-position" enum="org.gnome.shell.extensions.show-desktop-button.indicator-position">
 			<default>'RIGHT'</default>
 			<summary>Position on panel.</summary>
 			<description>Sets the position of the extension on the panel.
-			  Possible values are: Left end, Left, Center-left, Center-Right, Right, Right end.</description>
+				Possible values are: Left end, Left, Center-left, Center-right, Right, Right end.</description>
 		</key>
-
+		
+		<key name="indicator-icon-name" type="s">
+			<default>"user-home-symbolic"</default>
+			<summary>Indicator icon name.</summary>
+			<description>Set the icon name used for the panel indicator.</description>
+		</key>
+		
 	</schema>
-  
+	
 </schemalist>
