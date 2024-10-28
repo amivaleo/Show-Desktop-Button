@@ -38,6 +38,10 @@ If you'd like to translate the extension in your native language, you can
 
 ## Version history
 
+v37:
+
+* Getting rid of prefs.ui, newer prefs.js, added "change icon name" feature. Temporary rollback: messed up the translations
+
 v36:
 
 * Extended support to Gnome 47 by [nater1983](https://github.com/amivaleo/Show-Desktop-Button/pull/49)
