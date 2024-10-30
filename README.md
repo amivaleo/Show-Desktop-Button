@@ -38,6 +38,10 @@ If you'd like to translate the extension in your native language, you can
 
 ## Version history
 
+v38:
+
+* Implemented a better interface for choosing the indicator icon name
+
 v37:
 
 * Getting rid of prefs.ui, newer prefs.js, added "change icon name" feature. Temporary rollback: messed up the translations

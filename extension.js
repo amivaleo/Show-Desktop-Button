@@ -187,7 +187,7 @@ function resetToggleStatus() {
 function getPanelButton() {
 	panelButton = new PanelMenu.Button(0.0, `${extensionName}`, false);
 	let icon = new St.Icon({
-		icon_name: Settings.get_string('indicator-icon-name'),
+		icon_name: Settings.get_string('indicator-icon-name').split('/').pop(),
 		style_class: 'system-status-icon',
 	});
 	panelButton.add_child(icon);

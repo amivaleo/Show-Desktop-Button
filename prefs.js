@@ -10,35 +10,62 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		const settings = this.getSettings();
 		const page = new Adw.PreferencesPage();
 		const group = new Adw.PreferencesGroup();
+		let fileChooserKey = '';
 		page.add(group);
 		
+		// this tells to gnome that we have a fileChooser window
+		this._fileChooser = new Gtk.FileChooserNative({
+			title: 'Select an Image for the Panel Indicator',
+			modal: true,
+		});
+		
+		// we must set the fileChooser so that it only shows images
+		// so we create a filter
+		const filter = new Gtk.FileFilter();
+		// we say that the filter is for images
+		filter.add_pixbuf_formats();
+		// and then we apply the filter to the fileChooser
+		this._fileChooser.set_filter(filter);
+		
+		// we must define what happens when we interact with the fileChooser
+		this._fileChooser.connect('response', (dlg, response) => {
+			// if the user clicks on anything else than "accept", we stop the function
+			if (response !== Gtk.ResponseType.ACCEPT) return;
+			// otherwise we set the new icon name in fileChooserkey and its path
+			settings.set_string(fileChooserKey, dlg.get_file().get_path());
+
+		});
 		
 		// indicator icon name title and subtitle
 		const rowIndicatorIconName = new Adw.ActionRow({
 			title: "Icon Name",
-			subtitle: "Choose a file from /usr/share/icons/",
+			activatable: true,
+			subtitle: "Icons must be located only in the following paths:\n" +
+						"/usr/share/icons/\n" +
+						"~/.icons/\n" +
+						"~/.local/share/icons/\n" +
+						"Only SVG format is accepted."
 		});
-		group.add(rowIndicatorIconName);
+		rowIndicatorIconName.connect('activated', () => {
+			fileChooserKey = 'indicator-icon-name';
+			this._fileChooser.transient_for = window;
+            const initialFolder = Gio.file_new_for_path("/usr/share/icons/");
+            this._fileChooser.set_current_folder(initialFolder);
+			this._fileChooser.show();
+		});
 		
 		// indicator icon name entry
-		const entryIndicatorIconName = new Gtk.Entry({
-			placeholder_text: "user-home-symbolic",
-			text: settings.get_string("indicator-icon-name"),
-			valign: Gtk.Align.CENTER,
-			hexpand: true,
+		this._labelIndicatorIconName = new Gtk.Label();
+		
+		settings.connect('changed::indicator-icon-name', () => {
+			this._updateLabelIndicatorIconName()
 		});
+		this._updateLabelIndicatorIconName();
 		
-		// put title and subtitle on the left, entry on the right
-		rowIndicatorIconName.add_suffix(entryIndicatorIconName);
-		// can write without having to delete the text
-		rowIndicatorIconName.activatable_widget = entryIndicatorIconName;
+		rowIndicatorIconName.add_suffix(this._labelIndicatorIconName);
 		
-        entryIndicatorIconName.connect("changed", (entry) => {
-            settings.set_string("indicator-icon-name", entry.text);
-            console.log("Icon name changed to: " + entry.text);
-        });
-        
-        
+		group.add(rowIndicatorIconName);
+		
 		// indicator position
 		const indicatorPosition = new Adw.ComboRow({
 			title: 'Position on Panel',
@@ -46,8 +73,20 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		})
 		indicatorPosition.set_selected(settings.get_enum('indicator-position'));
 		indicatorPosition.connect('notify::selected', ()=> {settings.set_enum('indicator-position', indicatorPosition.selected);});
+		
 		group.add(indicatorPosition)
 		
 		window.add(page);
+	}
+	_updateLabelIndicatorIconName() {
+		const settings = this.getSettings();
+		const filename = settings.get_string('indicator-icon-name');
+		this._labelIndicatorIconName.label = GLib.basename(filename);
+	}
+	on_destroy() {
+		if (this._fileChooser) this._fileChooser.destroy();
+		this._fileChooser = null;
+		console.log('Distruzione filechooser');
+		logDebug(`File chooser destroyed`);
 	}
 }
