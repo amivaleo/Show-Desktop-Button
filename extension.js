@@ -14,7 +14,7 @@ import St from 'gi://St';
 import Meta from 'gi://Meta';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
-import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
+import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 const TOGGLE_STATUS = {
 	UNMINIMIZE: 0,
@@ -44,19 +44,19 @@ function populateIgnoredWindows(windows) {
 		logDebug(`\t title: ${title}`);
 		logDebug(`\t window_type: ${window_type}`);
 		logDebug(`\t wm_class: ${wm_class}`);
-
+		
 		if (window_type === Meta.WindowType.DESKTOP) {
 			logDebug(`\t ${title} ignored: window_type is DESKTOP`);
 			ignoredWindows.push(windows[i]);
 			continue;
 		}
-
+		
 		if (window_type === Meta.WindowType.DOCK) {
 			logDebug(`\t ${title} ignored: window_type is DOCK`);
 			ignoredWindows.push(windows[i]);
 			continue;
 		}
-
+		
 		if (window_type === Meta.WindowType.MODAL_DIALOG) {
 			logDebug(`\t ${title} ignored: window_type is MODAL DIALOG`);
 			ignoredWindows.push(windows[i]);
@@ -68,13 +68,13 @@ function populateIgnoredWindows(windows) {
 			ignoredWindows.push(windows[i]);
 			continue;
 		}
-
+		
 		if (wm_class.endsWith('notejot')) {
 			logDebug(`\t ${title} ignored: name ends with notejot`);
 			ignoredWindows.push(windows[i]);
 			continue;
 		}
-
+		
 		if (wm_class === 'conky') {
 			logDebug(`\t ${title} ignored: wm_class is conky`);
 			ignoredWindows.push(windows[i]);
@@ -223,13 +223,13 @@ export default class extends Extension {
 			addButton();
 		});
 		Settings.connect('changed::indicator-icon-name', () => {
-            removeButton();
+			removeButton();
 			addButton();
 		});
 		resetToggleStatus();
 		addButton();
 	}
-
+	
 	/* disable extension
 	*/
 	disable() {

@@ -1,5 +1,4 @@
-import {ExtensionPreferences} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
-
+import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 import Adw from "gi://Adw";
 import Gio from "gi://Gio";
 import GLib from "gi://GLib";
@@ -15,7 +14,7 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		
 		// this tells to gnome that we have a fileChooser window
 		this._fileChooser = new Gtk.FileChooserNative({
-			title: 'Select an Image for the Panel Indicator',
+			title: _('Select an Image for the Panel Indicator'),
 			modal: true,
 		});
 		
@@ -38,13 +37,13 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		
 		// indicator icon name title and subtitle
 		const rowIndicatorIconName = new Adw.ActionRow({
-			title: "Icon Name",
+			title: _("Icon Name"),
 			activatable: true,
-			subtitle: "Icons must be located only in the following paths:\n" +
+			subtitle: _("Icons must be located only in the following paths:\n") +
 						"/usr/share/icons/\n" +
 						"~/.icons/\n" +
 						"~/.local/share/icons/\n" +
-						"Only SVG format is accepted."
+						_("Only SVG format is accepted.")
 		});
 		rowIndicatorIconName.connect('activated', () => {
 			fileChooserKey = 'indicator-icon-name';
@@ -68,8 +67,8 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		
 		// indicator position
 		const indicatorPosition = new Adw.ComboRow({
-			title: 'Position on Panel',
-			model: new Gtk.StringList({strings: ["Far Left", "Left", "Center-left", "Center-right", "Right", "Far Right"]}),
+			title: _('Position on Panel'),
+			model: new Gtk.StringList({strings: [_("Far Left"), _("Left"), _("Center-left"), _("Center-right"), _("Right"), _("Far Right")]}),
 		})
 		indicatorPosition.set_selected(settings.get_enum('indicator-position'));
 		indicatorPosition.connect('notify::selected', ()=> {settings.set_enum('indicator-position', indicatorPosition.selected);});
@@ -77,6 +76,7 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		group.add(indicatorPosition)
 		
 		window.add(page);
+		window.connect('close-request', this.on_destroy.bind(this));
 	}
 	_updateLabelIndicatorIconName() {
 		const settings = this.getSettings();
@@ -84,9 +84,13 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		this._labelIndicatorIconName.label = GLib.basename(filename);
 	}
 	on_destroy() {
-		if (this._fileChooser) this._fileChooser.destroy();
-		this._fileChooser = null;
-		console.log('Distruzione filechooser');
-		logDebug(`File chooser destroyed`);
+		if (this._fileChooser) {
+			this._fileChooser.destroy();
+			this._fileChooser = null;
+		}
+		if (this._labelIndicatorIconName) {
+			this._labelIndicatorIconName.destroy();
+			this._labelIndicatorIconName = null;
+		}
 	}
 }
