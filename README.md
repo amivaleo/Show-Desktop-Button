@@ -38,6 +38,10 @@ If you'd like to translate the extension in your native language, you can
 
 ## Version history
 
+v40:
+
+* Added back translastions
+
 v39:
 
 * Fixed an error introduced in v38
