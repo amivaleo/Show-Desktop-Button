@@ -192,6 +192,7 @@ function getPanelButton() {
 	});
 	panelButton.add_child(icon);
 	panelButton.connect('button-press-event', toggleDesktop);
+	panelButton.connect('touch-event', toggleDesktop);
 	return panelButton;
 }
 
