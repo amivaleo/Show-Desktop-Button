@@ -38,8 +38,6 @@ If you'd like to translate the extension in your native language, you can
 
 ## Version history
 
-## Version history
-
 | Version | Changes |
 |---------|---------|
 | 40    | Added back translations |
