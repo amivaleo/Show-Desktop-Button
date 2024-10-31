@@ -2,9 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-21 13:29+0100\n"
+"POT-Creation-Date: 2024-10-31 09:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -13,29 +17,46 @@
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "Center-left"
+#: prefs.js:17
+msgid "Select an Image for the Panel Indicator"
 msgstr ""
 
-msgid "Center-right"
+#: prefs.js:40
+msgid "Icon Name"
 msgstr ""
 
-msgid "Far left"
+#: prefs.js:42
+msgid "Icons must be located only in the following paths:\n"
 msgstr ""
 
-msgid "Far right"
+#: prefs.js:46
+msgid "Only SVG format is accepted."
 msgstr ""
 
-msgid "Indicator position on panel"
+#: prefs.js:70
+msgid "Position on Panel"
 msgstr ""
 
+#: prefs.js:71
+msgid "Far Left"
+msgstr ""
+
+#: prefs.js:71
 msgid "Left"
 msgstr ""
 
+#: prefs.js:71
+msgid "Center-left"
+msgstr ""
+
+#: prefs.js:71
+msgid "Center-right"
+msgstr ""
+
+#: prefs.js:71
 msgid "Right"
 msgstr ""
 
-msgid "Position"
-msgstr ""
-
-msgid "Set the position of the indicator on the top panel"
+#: prefs.js:71
+msgid "Far Right"
 msgstr ""
