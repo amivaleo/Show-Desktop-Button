@@ -17,6 +17,7 @@ If you'd like to translate the extension in your native language, you can downlo
 
 | Version | Changes |
 |---------|---------|
+| 41    | Fix an issue with the icon_name and added touchscreen compatibility |
 | 40    | Added back translations |
 | 39    | Fixed an error introduced in v38 |
 | 38    | Implemented a better interface for choosing the indicator icon name |
