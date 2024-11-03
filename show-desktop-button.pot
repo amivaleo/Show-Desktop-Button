@@ -1,62 +1,88 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# JIMMY SCIONTI <JIMMY.SCIONTI@GMAIL.COM>, 2024.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-31 09:10+0100\n"
+"POT-Creation-Date: 2024-11-03 18:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Last-Translator: Jimmy Scionti <jimmy.scionti@gmail.com>\n"
+"Language-Team: Jimmy Scionti <jimmy.scionti@gmail.com>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.5\n"
 
-#: prefs.js:17
-msgid "Select an Image for the Panel Indicator"
+#: prefs.js:18
+msgid "Select an SVG for the Panel Indicator"
 msgstr ""
 
-#: prefs.js:40
+#: prefs.js:24
+msgid "SVG Images"
+msgstr ""
+
+#: prefs.js:38
 msgid "Icon Name"
 msgstr ""
 
-#: prefs.js:42
+#: prefs.js:40
 msgid "Icons must be located only in the following paths:\n"
 msgstr ""
 
-#: prefs.js:46
-msgid "Only SVG format is accepted."
+#: prefs.js:56
+msgid "Click to change icon"
 msgstr ""
 
-#: prefs.js:70
+#: prefs.js:69
 msgid "Position on Panel"
 msgstr ""
 
-#: prefs.js:71
+#: prefs.js:70
 msgid "Far Left"
 msgstr ""
 
-#: prefs.js:71
+#: prefs.js:70
 msgid "Left"
 msgstr ""
 
-#: prefs.js:71
+#: prefs.js:70
 msgid "Center-left"
 msgstr ""
 
-#: prefs.js:71
+#: prefs.js:70
 msgid "Center-right"
 msgstr ""
 
-#: prefs.js:71
+#: prefs.js:70
 msgid "Right"
 msgstr ""
 
-#: prefs.js:71
+#: prefs.js:70
 msgid "Far Right"
+msgstr ""
+
+#: prefs.js:81
+msgid "Shortcut"
+msgstr ""
+
+#: prefs.js:93
+msgid "Click to set shortcut"
+msgstr ""
+
+#: prefs.js:110
+msgid "Remove shortcut"
+msgstr ""
+
+#: prefs.js:135
+msgid "Click to assign shortcut"
+msgstr ""
+
+#: prefs.js:160
+msgid ""
+"Press keyboard shortcut, or Escape to cancel, or BackSpace to clear the "
+"shortcut."
 msgstr ""
