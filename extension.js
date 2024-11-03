@@ -8,10 +8,10 @@
  * $ journalctl -f -o cat /usr/bin/gnome-shell
  */
 
-// If you want to debug the extension,
-
+import Shell from 'gi://Shell';
 import St from 'gi://St';
 import Meta from 'gi://Meta';
+import GLib from 'gi://GLib';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
@@ -187,7 +187,7 @@ function resetToggleStatus() {
 function getPanelButton() {
 	panelButton = new PanelMenu.Button(0.0, `${extensionName}`, false);
 	let icon = new St.Icon({
-		icon_name: Settings.get_string('indicator-icon-name').split('/').pop().replace(/\.[^/.]+$/, ''),
+		icon_name: GLib.path_get_basename(Settings.get_string('indicator-icon-name')).replace(/\.[^/.]+$/, ''),
 		style_class: 'system-status-icon',
 	});
 	panelButton.add_child(icon);
@@ -229,8 +229,18 @@ export default class extends Extension {
 		});
 		resetToggleStatus();
 		addButton();
+		
+		Main.wm.addKeybinding(
+      'indicator-shortcut',
+      Settings,
+      Meta.KeyBindingFlags.NONE,
+      Shell.ActionMode.ALL,
+      () => {
+        toggleDesktop();
+      }
+    );
 	}
-	
+  
 	/* disable extension
 	*/
 	disable() {
@@ -238,5 +248,6 @@ export default class extends Extension {
 		ignoredWindows = [];
 		Settings = null;
 		removeButton();
+		Main.wm.removeKeybinding('indicator-shortcut');
 	}
 }

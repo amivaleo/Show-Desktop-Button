@@ -25,6 +25,12 @@
 			<description>Set the icon name used for the panel indicator.</description>
 		</key>
 		
+		<key name="indicator-shortcut" type="as">
+			<default><![CDATA[['<Control><Super>z']]]></default>
+			<summary>Shortcut</summary>
+			<description>Shortcut to activate Show Desktop Button.</description>
+		</key>
+		
 	</schema>
 	
 </schemalist>
