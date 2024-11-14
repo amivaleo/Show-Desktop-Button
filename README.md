@@ -17,6 +17,7 @@ If you'd like to translate the extension in your native language, you can downlo
 
 | Version | Changes |
 |---------|---------|
+| 43    | Added reset button for the indicator icon name & merged with Hide-Unfocused |
 | 42    | Added shortcut |
 | 41    | Fix an issue with the icon_name and added touchscreen compatibility |
 | 40    | Added back translations |
