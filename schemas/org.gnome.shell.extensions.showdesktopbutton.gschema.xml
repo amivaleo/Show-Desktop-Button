@@ -12,6 +12,12 @@
 	
 	<schema path="/org/gnome/shell/extensions/show-desktop-button/" id="org.gnome.shell.extensions.show-desktop-button">
 		
+		<key name="keep-focused" type="b">
+			<default>false</default>
+			<summary>Keep focused window</summary>
+			<description>Do not hide the focused window.</description>
+		</key>
+		
 		<key name="indicator-position" enum="org.gnome.shell.extensions.show-desktop-button.indicator-position">
 			<default>'RIGHT'</default>
 			<summary>Position on panel.</summary>
@@ -20,12 +26,12 @@
 		</key>
 		
 		<key name="indicator-icon-name" type="s">
-			<default>"user-home-symbolic"</default>
+			<default>"user-home-symbolic.svg"</default>
 			<summary>Indicator icon name.</summary>
 			<description>Set the icon name used for the panel indicator.</description>
 		</key>
 		
-		<key name="indicator-shortcut" type="as">
+		<key name="shortcut" type="as">
 			<default><![CDATA[['<Control><Super>z']]]></default>
 			<summary>Shortcut</summary>
 			<description>Shortcut to activate Show Desktop Button.</description>
@@ -34,3 +40,4 @@
 	</schema>
 	
 </schemalist>
+

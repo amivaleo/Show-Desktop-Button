@@ -37,6 +37,7 @@ function logDebug(message) {
 function populateIgnoredWindows(windows) {
 	for (let i = 0; i < windows.length; ++i) {
 		let title = windows[i].title ?? '';
+		let focusedWindow = global.display.get_focus_window();
 		let window_type = windows[i].window_type ?? '';
 		let wm_classInitial = windows[i].wm_class ?? '';
 		let wm_class = wm_classInitial.toLowerCase();
@@ -44,6 +45,12 @@ function populateIgnoredWindows(windows) {
 		logDebug(`\t title: ${title}`);
 		logDebug(`\t window_type: ${window_type}`);
 		logDebug(`\t wm_class: ${wm_class}`);
+		
+		if (windows[i] === focusedWindow && Settings.get_boolean('keep-focused')) {
+			logDebug(`\t ${title} ignored: window is focused`);
+			ignoredWindows.push(windows[i]);
+			continue;
+		}
 		
 		if (window_type === Meta.WindowType.DESKTOP) {
 			logDebug(`\t ${title} ignored: window_type is DESKTOP`);
@@ -186,10 +193,12 @@ function resetToggleStatus() {
  */
 function getPanelButton() {
 	panelButton = new PanelMenu.Button(0.0, `${extensionName}`, false);
+	let iconName = GLib.path_get_basename(Settings.get_string('indicator-icon-name'));
 	let icon = new St.Icon({
-		icon_name: GLib.path_get_basename(Settings.get_string('indicator-icon-name')).replace(/\.[^/.]+$/, ''),
+		icon_name: iconName.slice(0, iconName.lastIndexOf('.')),
 		style_class: 'system-status-icon',
 	});
+	
 	panelButton.add_child(icon);
 	panelButton.connect('button-press-event', toggleDesktop);
 	panelButton.connect('touch-event', toggleDesktop);
@@ -219,6 +228,11 @@ export default class extends Extension {
 	enable() {
 		extensionName = this.metadata.name;
 		Settings = this.getSettings();
+		Settings.connect('changed::keep-focused', () => {
+			resetToggleStatus();
+			removeButton();
+			addButton();
+		});
 		Settings.connect('changed::indicator-position', () => {
 			removeButton();
 			addButton();
@@ -231,16 +245,16 @@ export default class extends Extension {
 		addButton();
 		
 		Main.wm.addKeybinding(
-      'indicator-shortcut',
-      Settings,
-      Meta.KeyBindingFlags.NONE,
-      Shell.ActionMode.ALL,
-      () => {
-        toggleDesktop();
-      }
-    );
+			'shortcut',
+			Settings,
+			Meta.KeyBindingFlags.NONE,
+			Shell.ActionMode.ALL,
+			() => {
+				toggleDesktop();
+			}
+		);
 	}
-  
+	
 	/* disable extension
 	*/
 	disable() {
@@ -248,6 +262,6 @@ export default class extends Extension {
 		ignoredWindows = [];
 		Settings = null;
 		removeButton();
-		Main.wm.removeKeybinding('indicator-shortcut');
+		Main.wm.removeKeybinding('shortcut');
 	}
 }
