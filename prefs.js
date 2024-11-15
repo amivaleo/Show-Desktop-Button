@@ -36,23 +36,17 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		
 		
 		// Row for the keep-focused setting
-		const rowKeepFocused = new Adw.ActionRow({
+		const rowKeepFocused = new Adw.SwitchRow({
 			title: _("Keep Focused Window"),
 			subtitle: _("Do not hide the focused window."),
+    			active: settings.get_boolean('keep-focused'), // Set initial state from the setting
 		});
-		
-		const switchKeepFocused = new Gtk.Switch({
-			active: settings.get_boolean('keep-focused'), // Set initial state from the setting
-			valign: Gtk.Align.CENTER,
-		});
-		switchKeepFocused.connect('state-set', (widget, state) => {
+		rowKeepFocused.connect('state-set', (widget, state) => {
 			settings.set_boolean('keep-focused', state);
 		});
 		settings.connect('changed::keep-focused', () => {
-			switchKeepFocused.set_active(settings.get_boolean('keep-focused'));
+			rowKeepFocused.set_active(settings.get_boolean('keep-focused'));
 		});
-		
-		rowKeepFocused.add_suffix(switchKeepFocused);
 		group.add(rowKeepFocused);
 		
 		
