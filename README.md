@@ -17,6 +17,7 @@ If you'd like to translate the extension in your native language, you can downlo
 
 | Version | Changes |
 |---------|---------|
+| 45    | Extended support to Gnome 48 by [nater1983](https://github.com/amivaleo/Show-Desktop-Button/pull/53) and Gnome 49| 
 | 44    | Corrected a mistake in prefs.js... |
 | 43    | Added reset button for the indicator icon name & merged with Hide-Unfocused |
 | 42    | Added shortcut |
