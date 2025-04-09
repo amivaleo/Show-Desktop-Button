@@ -5,7 +5,7 @@ A button that hide/show all the open windows on desktop
 
 ## Installation
 
-You can automatically install the extension from [webpage](https://extensions.gnome.org/extension/1194/show-desktop-button/) on gnome extension website.
+[<img src="https://user-images.githubusercontent.com/15643750/212080370-77899e64-bae8-43f1-b67a-fc946785c4b3.png" height="100">](https://extensions.gnome.org/extension/1194/show-desktop-button/)
 
 
 ## Translation
