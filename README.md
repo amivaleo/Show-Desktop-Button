@@ -1,4 +1,4 @@
-# Show-desktop-button
+# Show Desktop Button
 
 A button that hide/show all the open windows on desktop.
 
