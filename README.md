@@ -10,7 +10,7 @@ A button that hide/show all the open windows on desktop.
 
 ## Translation
 
-If you'd like to translate the extension in your native language, you can download `show-desktop-button.pot` and edit that using, for example, `Poedit`. Then send me the `.po` file.
+If you'd like to help translate the extension, download and edit `show-desktop-button.pot` using, for example, `Poedit`, then send me the `.po` file.
 
 
 ## Version history
