@@ -1,0 +1,9 @@
+for mo in */LC_MESSAGES/show-desktop-button.mo; do
+  po="${mo%.mo}.po"
+  msgunfmt "$mo" -o "$po"
+done
+
+for po in */LC_MESSAGES/show-desktop-button.po; do
+  mo="${po%.po}.mo"
+  msgfmt "$po" -o "$mo"
+done
