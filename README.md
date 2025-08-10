@@ -17,6 +17,7 @@ If you'd like to help translate the extension, download and edit `show-desktop-b
 
 | Version | Changes |
 |---------|---------|
+| 47    | Extended support to Gnome 49 by [nater1983](https://github.com/amivaleo/Show-Desktop-Button/pull/55) |
 | 46    | Extended support to Gnome 48 by [nater1983](https://github.com/amivaleo/Show-Desktop-Button/pull/53) |
 | 45    | I added support to Gnome 49 prematurely... |
 | 44    | Corrected a mistake in prefs.js... |
