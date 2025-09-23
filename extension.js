@@ -70,11 +70,17 @@ function populateIgnoredWindows(windows) {
 			continue;
 		}
 		
-		if (title.startsWith('DING')) {
-			logDebug(`\t ${title} ignored: name starts with DING`);
+		// --- Ignore DING (Desktop Icons NG) windows more reliably ---
+		if (
+			(wm_class.includes('ding') || wm_class.includes('desktop')) || // matches class names
+			title.toLowerCase().includes('desktop') || // fallback for title
+			window_type === Meta.WindowType.DESKTOP // catches most DING cases
+		) {
+			logDebug(`\t ${title} ignored: matched DING / Desktop Icons NG`);
 			ignoredWindows.push(windows[i]);
 			continue;
 		}
+
 		
 		if (wm_class.endsWith('notejot')) {
 			logDebug(`\t ${title} ignored: name ends with notejot`);
@@ -108,14 +114,13 @@ function populateIgnoredWindows(windows) {
  * from the full list (windows)
  */
 function pruneWindows(windows) {
-	for (let i = 0; i < windows.length; ++i) {
-		for (let j = 0; j < ignoredWindows.length; j++) {
-			if (ignoredWindows[j] === windows[i]) {
-				logDebug(`\t this was in ignoredWindows: ${windows[i].title}`);
-				windows.splice(i, 1);
-			}
-		}
-	}
+	logDebug('Pruning ignored windows...');
+	return windows.filter(w => {
+		let ignored = ignoredWindows.includes(w);
+		if (ignored)
+			logDebug(`\t Pruned: ${w.title}`);
+		return !ignored;
+	});
 }
 
 /* if at least one window is unminimized, the button will minimize it.
@@ -168,7 +173,7 @@ function toggleDesktop() {
 	// 4 if so -> the extension minimizes them, otherwise it unminimizes them all.
 	
 	populateIgnoredWindows(windows);
-	pruneWindows(windows);
+	windows = pruneWindows(windows);
 	checkUnminimizedWindows(windows);
 	
 	logDebug(`toggleStatus is ${toggleStatus}`);
