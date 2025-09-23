@@ -73,7 +73,7 @@ function populateIgnoredWindows(windows) {
 		// --- Ignore DING (Desktop Icons NG) windows more reliably ---
 		if ((wm_class.includes('ding') || wm_class.includes('desktop')) || // matches class names
 			title.toLowerCase().includes('desktop') || // fallback for title
-			window_type === Meta.WindowType.DESKTOP // catches most DING cases
+			window_type === Meta.WindowType.DESKTOP) // catches most DING cases
 		    logDebug(`\t ${title} ignored: matched Desktop Icons NG`);
 		    ignoredWindows.push(windows[i]);
 		    continue;
