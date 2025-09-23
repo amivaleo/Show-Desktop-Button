@@ -71,18 +71,13 @@ function populateIgnoredWindows(windows) {
 		}
 		
 		// --- Ignore DING (Desktop Icons NG) windows more reliably ---
-		// --- Ignore only Desktop Icons NG (DING) windows ---
-		if (wm_class === 'ding' ||                // exact match
-		    wm_class === 'ding.desktop' ||        // full desktop class
-		    title.toLowerCase() === 'desktop' ||  // fallback if title literally says "Desktop"
-		    window_type === Meta.WindowType.DESKTOP // GNOME marks it explicitly as a desktop window
-		) {
+		if ((wm_class.includes('ding') || wm_class.includes('desktop')) || // matches class names
+			title.toLowerCase().includes('desktop') || // fallback for title
+			window_type === Meta.WindowType.DESKTOP // catches most DING cases
 		    logDebug(`\t ${title} ignored: matched Desktop Icons NG`);
 		    ignoredWindows.push(windows[i]);
 		    continue;
 		}
-
-
 		
 		if (wm_class.endsWith('notejot')) {
 			logDebug(`\t ${title} ignored: name ends with notejot`);
