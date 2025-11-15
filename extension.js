@@ -127,9 +127,9 @@ function pruneWindows(windows) {
  */
 function checkUnminimizedWindows(windows) {
 	toggleStatus = TOGGLE_STATUS.UNMINIMIZE;
-	for (let i = 0; i < windows.length; ++i) {
-		if (!windows[i].minimized) {
-			logDebug(`\t ${windows[i].title} is unminimized`);
+
+	for (let w of windows) {
+		if (!w.minimized) {
 			toggleStatus = TOGGLE_STATUS.MINIMIZE;
 			continue;
 		}
@@ -140,20 +140,15 @@ function checkUnminimizedWindows(windows) {
  */
 function unminimizeWindows(windows) {
 	logDebug(`executing unminimizeWindows(windows)`);
-	for (let i = 0; i < windows.length; ++i) {
-		logDebug(`\t ${windows[i].title} is getting unminimized}`);
-		windows[i].unminimize();
-	}
+	for (let w of windows)
+		w.unminimize();
 }
 
 /* minimize windows
  */
 function minimizeWindows(windows) {
-	logDebug(`executing minimizeWindows(windows)`);
-	for (let i = 0; i < windows.length; i++) {
-		logDebug(`\t ${windows[i].title} is getting minimized}`);
-		windows[i].minimize();
-	}
+	for (let w of windows)
+		w.minimize();
 }
 
 /* toggle desktop windows
@@ -164,8 +159,11 @@ function toggleDesktop() {
 		return;
 	}
 	let metaWorkspace = global.workspace_manager.get_active_workspace();
-	let windows = metaWorkspace.list_windows();
-	
+	// let windows = metaWorkspace.list_windows();
+	let windows = global.get_window_actors()
+    .map(actor => actor.meta_window)
+    .filter(w => w && w.get_workspace() === metaWorkspace);
+    
 	// 1 make a list of all windows 
 	// 2 not all windows must be touched by this extension, some must be ignored
 	// 3 check if there are unminimized windows in the remaining windows list
@@ -222,16 +220,17 @@ function addButton() {
 /* remove button from panel
  */
 function removeButton() {
-	panelButton.destroy();
-	panelButton = null;
+	if (panelButton) {
+		panelButton.destroy();
+		panelButton = null;
+	}
 }
 
 export default class extends Extension {
-	/* enable extension
-	*/
 	enable() {
 		extensionName = this.metadata.name;
 		Settings = this.getSettings();
+
 		Settings.connect('changed::keep-focused', () => {
 			resetToggleStatus();
 			removeButton();
@@ -245,6 +244,7 @@ export default class extends Extension {
 			removeButton();
 			addButton();
 		});
+
 		resetToggleStatus();
 		addButton();
 		
@@ -253,14 +253,10 @@ export default class extends Extension {
 			Settings,
 			Meta.KeyBindingFlags.NONE,
 			Shell.ActionMode.ALL,
-			() => {
-				toggleDesktop();
-			}
+			() => toggleDesktop()
 		);
 	}
-	
-	/* disable extension
-	*/
+
 	disable() {
 		resetToggleStatus();
 		ignoredWindows = [];
