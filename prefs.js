@@ -42,7 +42,7 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		});
 		
 		const switchKeepFocused = new Gtk.Switch({
-			active: settings.get_boolean('keep-focused'), // Set initial state from the setting
+			active: settings.get_boolean('keep-focused'),
 			valign: Gtk.Align.CENTER,
 		});
 		switchKeepFocused.connect('state-set', (widget, state) => {
@@ -115,6 +115,29 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		});
 		
 		group.add(indicatorPosition);
+		
+		
+		
+        // Row for hover preview setting
+        const rowHoverPreview = new Adw.ActionRow({
+            title: _("Hover Preview"),
+            subtitle: _("Make windows transparent when hovering the panel indicator"),
+        });
+        
+        const switchHoverPreview = new Gtk.Switch({
+            active: settings.get_boolean('hover-preview'),
+            valign: Gtk.Align.CENTER,
+        });
+        
+        switchHoverPreview.connect('state-set', (widget, state) => {
+            settings.set_boolean('hover-preview', state);
+        });
+            
+        settings.connect('changed::hover-preview', () => {
+            switchHoverPreview.set_active(settings.get_boolean('hover-preview'));
+        });
+        rowHoverPreview.add_suffix(switchHoverPreview);
+        group.add(rowHoverPreview);
 		
 		
 		

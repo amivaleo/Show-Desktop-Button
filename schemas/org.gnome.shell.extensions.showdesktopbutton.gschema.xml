@@ -12,6 +12,11 @@
 	
 	<schema path="/org/gnome/shell/extensions/show-desktop-button/" id="org.gnome.shell.extensions.show-desktop-button">
 		
+		<key name="hover-preview" type="b">
+      <default>true</default>
+      <summary>Enable hover preview</summary>
+    </key>
+    
 		<key name="keep-focused" type="b">
 			<default>false</default>
 			<summary>Keep focused window</summary>
@@ -40,4 +45,3 @@
 	</schema>
 	
 </schemalist>
-

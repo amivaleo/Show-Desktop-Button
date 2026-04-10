@@ -28,7 +28,7 @@ let panelButton;
 let ignoredWindows = [];
 
 function logDebug(message) {
-	console.debug(message);
+	console.log(message);
 }
 
 /* make a list of all open windows
@@ -72,7 +72,7 @@ function populateIgnoredWindows(windows) {
 		
 		// --- Ignore DING (Desktop Icons NG) windows more reliably ---
 		if ((wm_class.includes('ding') || wm_class.includes('desktop')) || // matches class names
-			title.toLowerCase().includes('desktop') || // fallback for title
+			// title.toLowerCase().includes('desktop') || // fallback for title
 			window_type === Meta.WindowType.DESKTOP // catches most DING cases
 		) {
 			logDebug(`\t ${title} ignored: matched DING / Desktop Icons NG`);
@@ -191,6 +191,38 @@ function resetToggleStatus() {
 	ignoredWindows = [];
 }
 
+/* window preview
+ */
+function setWindowsOpacity(windows, opacity) {
+	for (let w of windows) {
+		let actor = w.get_compositor_private();
+		if (actor) {
+		    actor.opacity = opacity;
+		}
+	}
+}
+
+/* hovering preview
+ */
+function previewDesktop(enable) {
+  	let metaWorkspace = global.workspace_manager.get_active_workspace();
+  	
+  	let windows = global.get_window_actors()
+  		.map(actor => actor.meta_window)
+  		.filter(w => w && w.get_workspace() === metaWorkspace);
+
+	populateIgnoredWindows(windows);
+	windows = pruneWindows(windows);
+	
+	if (enable) {
+		setWindowsOpacity(windows, 80); // opacity
+	} else {
+		setWindowsOpacity(windows, 255); // normal
+	}
+	
+	ignoredWindows = [];
+}
+
 /* get panel button
  */
 function getPanelButton() {
@@ -204,6 +236,16 @@ function getPanelButton() {
 	panelButton.add_child(icon);
 	panelButton.connect('button-press-event', toggleDesktop);
 	panelButton.connect('touch-event', toggleDesktop);
+    panelButton.connect('enter-event', () => {
+        if (Settings.get_boolean('hover-preview')) {
+            previewDesktop(true);
+        }
+    });
+    panelButton.connect('leave-event', () => {
+        if (Settings.get_boolean('hover-preview')) {
+            previewDesktop(false);
+        }
+    });
 	return panelButton;
 }
 
@@ -244,7 +286,10 @@ export default class extends Extension {
 			removeButton();
 			addButton();
 		});
-
+		Settings.connect('changed::hover-preview', () => {
+            previewDesktop(false);
+        });
+        
 		resetToggleStatus();
 		addButton();
 		
