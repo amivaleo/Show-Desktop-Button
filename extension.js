@@ -26,6 +26,8 @@ let toggleStatus = TOGGLE_STATUS.UNMINIMIZE;
 let Settings;
 let panelButton;
 let ignoredWindows = [];
+let settingsSignals = [];
+let panelSignals = [];
 
 function logDebug(message) {
 	console.log(message);
@@ -161,9 +163,9 @@ function toggleDesktop() {
 	let metaWorkspace = global.workspace_manager.get_active_workspace();
 	// let windows = metaWorkspace.list_windows();
 	let windows = global.get_window_actors()
-    .map(actor => actor.meta_window)
-    .filter(w => w && w.get_workspace() === metaWorkspace);
-    
+		.map(actor => actor.meta_window)
+		.filter(w => w && w.get_workspace() === metaWorkspace);
+		
 	// 1 make a list of all windows 
 	// 2 not all windows must be touched by this extension, some must be ignored
 	// 3 check if there are unminimized windows in the remaining windows list
@@ -197,7 +199,7 @@ function setWindowsOpacity(windows, opacity) {
 	for (let w of windows) {
 		let actor = w.get_compositor_private();
 		if (actor) {
-		    actor.opacity = opacity;
+				actor.opacity = opacity;
 		}
 	}
 }
@@ -205,11 +207,11 @@ function setWindowsOpacity(windows, opacity) {
 /* hovering preview
  */
 function previewDesktop(enable) {
-  	let metaWorkspace = global.workspace_manager.get_active_workspace();
-  	
-  	let windows = global.get_window_actors()
-  		.map(actor => actor.meta_window)
-  		.filter(w => w && w.get_workspace() === metaWorkspace);
+		let metaWorkspace = global.workspace_manager.get_active_workspace();
+		
+		let windows = global.get_window_actors()
+			.map(actor => actor.meta_window)
+			.filter(w => w && w.get_workspace() === metaWorkspace);
 
 	populateIgnoredWindows(windows);
 	windows = pruneWindows(windows);
@@ -234,18 +236,18 @@ function getPanelButton() {
 	});
 	
 	panelButton.add_child(icon);
-	panelButton.connect('button-press-event', toggleDesktop);
-	panelButton.connect('touch-event', toggleDesktop);
-    panelButton.connect('enter-event', () => {
-        if (Settings.get_boolean('hover-preview')) {
-            previewDesktop(true);
-        }
-    });
-    panelButton.connect('leave-event', () => {
-        if (Settings.get_boolean('hover-preview')) {
-            previewDesktop(false);
-        }
-    });
+	panelSignals.push(panelButton.connect('button-press-event', toggleDesktop));
+	panelSignals.push(panelButton.connect('touch-event', toggleDesktop));
+	panelSignals.push(panelButton.connect('enter-event', () => {
+		if (Settings.get_boolean('hover-preview')) {
+			previewDesktop(true);
+		}
+	}));
+	panelSignals.push(panelButton.connect('leave-event', () => {
+		if (Settings.get_boolean('hover-preview')) {
+			previewDesktop(false);
+		}
+	}));
 	return panelButton;
 }
 
@@ -272,24 +274,32 @@ export default class extends Extension {
 	enable() {
 		extensionName = this.metadata.name;
 		Settings = this.getSettings();
-
-		Settings.connect('changed::keep-focused', () => {
-			resetToggleStatus();
-			removeButton();
-			addButton();
-		});
-		Settings.connect('changed::indicator-position', () => {
-			removeButton();
-			addButton();
-		});
-		Settings.connect('changed::indicator-icon-name', () => {
-			removeButton();
-			addButton();
-		});
-		Settings.connect('changed::hover-preview', () => {
-            previewDesktop(false);
-        });
-        
+		
+		settingsSignals.push(
+			Settings.connect('changed::keep-focused', () => {
+				resetToggleStatus();
+				removeButton();
+				addButton();
+			})
+		);
+		settingsSignals.push(
+			Settings.connect('changed::indicator-position', () => {
+				removeButton();
+				addButton();
+			})
+		);
+		settingsSignals.push(
+			Settings.connect('changed::indicator-icon-name', () => {
+				removeButton();
+				addButton();
+			})
+		);
+		settingsSignals.push(
+			Settings.connect('changed::hover-preview', () => {
+				previewDesktop(false);
+			})
+		);
+		
 		resetToggleStatus();
 		addButton();
 		
@@ -303,6 +313,14 @@ export default class extends Extension {
 	}
 
 	disable() {
+		for (let id of settingsSignals) {
+			Settings.disconnect(id);
+		}
+		settingsSignals = [];
+		for (let id of panelSignals) {
+			panelButton.disconnect(id);
+		}
+		panelSignals = [];
 		resetToggleStatus();
 		ignoredWindows = [];
 		Settings = null;
