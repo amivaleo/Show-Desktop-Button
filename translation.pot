@@ -72,5 +72,11 @@ msgstr "Immagini SVG"
 msgid "Select an SVG for the Panel Indicator"
 msgstr "Seleziona un SVG per l'indicatore del pannello"
 
+msgid "Hover Preview"
+msgstr "Anteprima al passaggio del mouse"
+
+msgid "Make windows transparent when hovering the panel indicator"
+msgstr "Rende le finestre trasparenti al passaggio del mouse sull'indicatore del pannello"
+
 msgid "Shortcut"
 msgstr "Scorciatoia"
