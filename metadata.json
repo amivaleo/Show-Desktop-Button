@@ -6,14 +6,9 @@
   "localedir": "/usr/share/locale",
   "name": "Show Desktop Button",
   "settings-schema": "org.gnome.shell.extensions.show-desktop-button",
-  "shell-version": [
-    "45",
-    "46",
-    "47",
-    "48",
-    "49"
-  ],
+  "shell-version": [ "50" ],
   "url": "https://github.com/amivaleo/Show-Desktop-Button",
   "uuid": "show-desktop-button@amivaleo",
-  "version": 51
+  "version": 52
+  "debug" : false
 }
