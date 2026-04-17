@@ -17,6 +17,7 @@ If you'd like to help translate the extension, download and edit `show-desktop-b
 
 | Version | Changes |
 |---------|---------|
+| 52    | Updating for Gnome 50 |
 | 51    | Polishing... |
 | 50    | Added hover preview & fix ignored windows whose title includes 'desktop' |
 | 49    | Should fix multi-monitors behaviour |
