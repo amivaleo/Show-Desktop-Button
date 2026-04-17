@@ -5,326 +5,219 @@
  *
  * If you want to debug this extension, open 'metadata.json' and set 'debug' to true.
  * You can read the debugging messages in the terminal if you give the following:
- * $ journalctl -f -o cat /usr/bin/gnome-shell
+ * $ journalctl --user -f -o cat | grep Show-Desktop-Debug
  */
 
-import Shell from 'gi://Shell';
+import GObject from 'gi://GObject';
 import St from 'gi://St';
+import Clutter from 'gi://Clutter';
 import Meta from 'gi://Meta';
+import Shell from 'gi://Shell';
 import GLib from 'gi://GLib';
+
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
-import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
+import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-const TOGGLE_STATUS = {
-	UNMINIMIZE: 0,
-	MINIMIZE: 1,
-};
+const ShowDesktopButton = GObject.registerClass(
+class ShowDesktopButton extends PanelMenu.Button {
+    _init(extension) {
+        super._init(0.0, extension.metadata.name, true);
+        this._extension = extension;
+        this._timerId = 0;
 
-let extensionName;
-let toggleStatus = TOGGLE_STATUS.UNMINIMIZE;
-let Settings;
-let panelButton;
-let ignoredWindows = [];
-let settingsSignals = [];
-let panelSignals = [];
+        const settings = extension.getSettings();
+        let iconPath = settings.get_string('indicator-icon-name');
+        let iconBaseName = GLib.path_get_basename(iconPath);
+        let iconName = iconBaseName.slice(0, iconBaseName.lastIndexOf('.'));
 
-function logDebug(message) {
-	console.log(message);
-}
+        this.add_child(new St.Icon({
+            icon_name: iconName,
+            style_class: 'system-status-icon',
+        }));
 
-/* make a list of all open windows
- * populate: ignoredWindows , windowsToMinimize
- */
-function populateIgnoredWindows(windows) {
-	for (let i = 0; i < windows.length; ++i) {
-		let title = windows[i].title ?? '';
-		let focusedWindow = global.display.get_focus_window();
-		let window_type = windows[i].window_type ?? '';
-		let wm_classInitial = windows[i].wm_class ?? '';
-		let wm_class = wm_classInitial.toLowerCase();
-		logDebug(`minimize i: ${i}`);
-		logDebug(`\t title: ${title}`);
-		logDebug(`\t window_type: ${window_type}`);
-		logDebug(`\t wm_class: ${wm_class}`);
-		
-		if (windows[i] === focusedWindow && Settings.get_boolean('keep-focused')) {
-			logDebug(`\t ${title} ignored: window is focused`);
-			ignoredWindows.push(windows[i]);
-			continue;
-		}
-		
-		if (window_type === Meta.WindowType.DESKTOP) {
-			logDebug(`\t ${title} ignored: window_type is DESKTOP`);
-			ignoredWindows.push(windows[i]);
-			continue;
-		}
-		
-		if (window_type === Meta.WindowType.DOCK) {
-			logDebug(`\t ${title} ignored: window_type is DOCK`);
-			ignoredWindows.push(windows[i]);
-			continue;
-		}
-		
-		if (window_type === Meta.WindowType.MODAL_DIALOG) {
-			logDebug(`\t ${title} ignored: window_type is MODAL DIALOG`);
-			ignoredWindows.push(windows[i]);
-			continue;
-		}
-		
-		// --- Ignore DING (Desktop Icons NG) windows more reliably ---
-		if ((wm_class.includes('ding') || wm_class.includes('desktop')) || // matches class names
-			// title.toLowerCase().includes('desktop') || // fallback for title
-			window_type === Meta.WindowType.DESKTOP // catches most DING cases
-		) {
-			logDebug(`\t ${title} ignored: matched DING / Desktop Icons NG`);
-			ignoredWindows.push(windows[i]);
-			continue;
-		}
+        this.connect('enter-event', () => {
+            if (this._extension.getSettings().get_boolean('hover-preview')) {
+                this._clearTimer();
+                this._timerId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 500, () => {
+                    this._extension.logDebug("Hover timeout triggered");
+                    this._extension.previewDesktop(true);
+                    this._timerId = 0;
+                    return GLib.SOURCE_REMOVE;
+                });
+            }
+        });
 
-		
-		if (wm_class.endsWith('notejot')) {
-			logDebug(`\t ${title} ignored: name ends with notejot`);
-			ignoredWindows.push(windows[i]);
-			continue;
-		}
-		
-		if (wm_class === 'conky') {
-			logDebug(`\t ${title} ignored: wm_class is conky`);
-			ignoredWindows.push(windows[i]);
-			continue;
-		}
+        this.connect('leave-event', () => {
+            this._clearTimer();
+            this._extension.previewDesktop(false);
+        });
+    }
 
-		if (wm_class === 'Gjs') {
-			logDebug(`\t ${title} ignored: wm_class is Gjs`);
-			ignoredWindows.push(windows[i]);
-			continue;
-		}
+    _clearTimer() {
+        if (this._timerId > 0) {
+            GLib.source_remove(this._timerId);
+            this._timerId = 0;
+        }
+    }
 
-		if (title.startsWith('@!')
-				&& (title.endsWith('BDH') || title.endsWith('BDHF'))) {
-			logDebug(`\t ${title} ignored: title starts with @! and ends with BDH or BDHF`);
-			ignoredWindows.push(windows[i]);
-			continue;
-		}
-	}
-}
+    vfunc_event(event) {
+        if (event.type() === Clutter.EventType.BUTTON_PRESS) {
+            this._clearTimer();
+            this._extension.toggleDesktop();
+            return Clutter.EVENT_STOP;
+        }
+        return Clutter.EVENT_PROPAGATE;
+    }
+    
+    destroy() {
+        this._clearTimer();
+        super.destroy();
+    }
+});
 
-/* not all open windows must be touched.
- * we must remove those that must be ignored (ignoredWindows)
- * from the full list (windows)
- */
-function pruneWindows(windows) {
-	logDebug('Pruning ignored windows...');
-	return windows.filter(w => {
-		let ignored = ignoredWindows.includes(w);
-		if (ignored)
-			logDebug(`\t Pruned: ${w.title}`);
-		return !ignored;
-	});
-}
+export default class ShowDesktopExtension extends Extension {
+    enable() {
+        this._settings = this.getSettings();
+        this._signals = [];
 
-/* if at least one window is unminimized, the button will minimize it.
- * if this has to appen, toggleStatus changes to "MINIMIZE".
- */
-function checkUnminimizedWindows(windows) {
-	toggleStatus = TOGGLE_STATUS.UNMINIMIZE;
+        // Legge "debug": true dal metadata.json
+        this._debugEnabled = this.metadata['debug'] === true;
+        
+        this.logDebug("Extension enabled - Logging is active");
 
-	for (let w of windows) {
-		if (!w.minimized) {
-			toggleStatus = TOGGLE_STATUS.MINIMIZE;
-			continue;
-		}
-	}
-}
+        this._signals.push(
+            this._settings.connect('changed::indicator-position', () => this._refreshIndicator()),
+            this._settings.connect('changed::indicator-icon-name', () => this._refreshIndicator())
+        );
 
-/* unminimize windows
- */
-function unminimizeWindows(windows) {
-	logDebug(`executing unminimizeWindows(windows)`);
-	for (let w of windows)
-		w.unminimize();
-}
+        this._refreshIndicator();
 
-/* minimize windows
- */
-function minimizeWindows(windows) {
-	for (let w of windows)
-		w.minimize();
-}
+        Main.wm.addKeybinding(
+            'shortcut',
+            this._settings,
+            Meta.KeyBindingFlags.NONE,
+            Shell.ActionMode.ALL,
+            () => {
+                this.logDebug("Shortcut pressed");
+                this.toggleDesktop();
+            }
+        );
+    }
 
-/* toggle desktop windows
- */
-function toggleDesktop() {
-	// do not toggle when overview is open
-	if (Main.overview.visible) {
-		return;
-	}
-	let metaWorkspace = global.workspace_manager.get_active_workspace();
-	// let windows = metaWorkspace.list_windows();
-	let windows = global.get_window_actors()
-		.map(actor => actor.meta_window)
-		.filter(w => w && w.get_workspace() === metaWorkspace);
-		
-	// 1 make a list of all windows 
-	// 2 not all windows must be touched by this extension, some must be ignored
-	// 3 check if there are unminimized windows in the remaining windows list
-	// 4 if so -> the extension minimizes them, otherwise it unminimizes them all.
-	
-	populateIgnoredWindows(windows);
-	windows = pruneWindows(windows);
-	checkUnminimizedWindows(windows);
-	
-	logDebug(`toggleStatus is ${toggleStatus}`);
-	
-	if (toggleStatus === TOGGLE_STATUS.UNMINIMIZE) {
-		logDebug(`loading unminimizeWindows(windows)`);
-		unminimizeWindows(windows);
-	} else if (toggleStatus === TOGGLE_STATUS.MINIMIZE) {
-		logDebug(`loading minimizeWindows(windows)`);
-		minimizeWindows(windows);
-	}
-}
+    // Usiamo console.warn per assicurarci che journalctl lo mostri sempre
+    logDebug(message) {
+        if (this._debugEnabled) {
+            console.warn(`[Show-Desktop-Debug] ${message}`);
+        }
+    }
 
-/* reset toggle status
- */
-function resetToggleStatus() {
-	toggleStatus = TOGGLE_STATUS.MINIMIZE;
-	ignoredWindows = [];
-}
+    _refreshIndicator() {
+        this.logDebug("Refreshing Indicator UI");
+        if (this._indicator) {
+            this._indicator.destroy();
+            this._indicator = null;
+        }
 
-/* window preview
- */
-function setWindowsOpacity(windows, opacity) {
-	for (let w of windows) {
-		let actor = w.get_compositor_private();
-		if (actor) {
-				actor.opacity = opacity;
-		}
-	}
-}
+        this._indicator = new ShowDesktopButton(this);
 
-/* hovering preview
- */
-function previewDesktop(enable) {
-		let metaWorkspace = global.workspace_manager.get_active_workspace();
-		
-		let windows = global.get_window_actors()
-			.map(actor => actor.meta_window)
-			.filter(w => w && w.get_workspace() === metaWorkspace);
+        const position = ['left', 'left', 'center', 'center', 'right', 'right'];
+        const qualifier = [0, 1, 0, 1, 1, -1];
+        const index = this._settings.get_enum('indicator-position');
+        
+        Main.panel.addToStatusArea(
+            `${this.metadata.name} Indicator`, 
+            this._indicator, 
+            qualifier[index], 
+            position[index]
+        );
+    }
 
-	populateIgnoredWindows(windows);
-	windows = pruneWindows(windows);
-	
-	if (enable) {
-		setWindowsOpacity(windows, 80); // opacity
-	} else {
-		setWindowsOpacity(windows, 255); // normal
-	}
-	
-	ignoredWindows = [];
-}
+    previewDesktop(enable) {
+        const workspace = global.workspace_manager.get_active_workspace();
+        const windows = workspace.list_windows();
+        
+        windows.forEach(w => {
+            if (this._shouldIgnore(w)) return;
+            let actor = w.get_compositor_private();
+            if (actor) actor.opacity = enable ? 80 : 255;
+        });
+    }
 
-/* get panel button
- */
-function getPanelButton() {
-	panelButton = new PanelMenu.Button(0.0, `${extensionName}`, false);
-	let iconName = GLib.path_get_basename(Settings.get_string('indicator-icon-name'));
-	let icon = new St.Icon({
-		icon_name: iconName.slice(0, iconName.lastIndexOf('.')),
-		style_class: 'system-status-icon',
-	});
-	
-	panelButton.add_child(icon);
-	panelSignals.push(panelButton.connect('button-press-event', toggleDesktop));
-	panelSignals.push(panelButton.connect('touch-event', toggleDesktop));
-	panelSignals.push(panelButton.connect('enter-event', () => {
-		if (Settings.get_boolean('hover-preview')) {
-			previewDesktop(true);
-		}
-	}));
-	panelSignals.push(panelButton.connect('leave-event', () => {
-		if (Settings.get_boolean('hover-preview')) {
-			previewDesktop(false);
-		}
-	}));
-	return panelButton;
-}
+    toggleDesktop() {
+        if (Main.overview.visible) return;
+        const workspace = global.workspace_manager.get_active_workspace();
+        const windows = workspace.list_windows();
 
-/* add button to panel
- */
-function addButton() {
-	let role = `${extensionName} Indicator`;
-	let position = ['left', 'left', 'center', 'center', 'right', 'right'];
-	let qualifier = [0, 1, 0, 1, 1, -1];
-	let index = Settings.get_enum('indicator-position');
-	Main.panel.addToStatusArea(role, getPanelButton(), qualifier[index], position[index]);
-}
+        const validWindows = windows.filter(w => !this._shouldIgnore(w));
+        const hasUnminimized = validWindows.some(w => !w.minimized);
 
-/* remove button from panel
- */
-function removeButton() {
-	if (panelButton) {
-		panelButton.destroy();
-		panelButton = null;
-	}
-}
+        this.logDebug(`Toggle: valid windows count = ${validWindows.length}, hasUnminimized = ${hasUnminimized}`);
 
-export default class extends Extension {
-	enable() {
-		extensionName = this.metadata.name;
-		Settings = this.getSettings();
-		
-		settingsSignals.push(
-			Settings.connect('changed::keep-focused', () => {
-				resetToggleStatus();
-				removeButton();
-				addButton();
-			})
-		);
-		settingsSignals.push(
-			Settings.connect('changed::indicator-position', () => {
-				removeButton();
-				addButton();
-			})
-		);
-		settingsSignals.push(
-			Settings.connect('changed::indicator-icon-name', () => {
-				removeButton();
-				addButton();
-			})
-		);
-		settingsSignals.push(
-			Settings.connect('changed::hover-preview', () => {
-				previewDesktop(false);
-			})
-		);
-		
-		resetToggleStatus();
-		addButton();
-		
-		Main.wm.addKeybinding(
-			'shortcut',
-			Settings,
-			Meta.KeyBindingFlags.NONE,
-			Shell.ActionMode.ALL,
-			() => toggleDesktop()
-		);
-	}
+        if (hasUnminimized) {
+            const focusedWindow = global.display.get_focus_window();
+            const keepFocused = this._settings.get_boolean('keep-focused');
+            
+            validWindows.forEach(w => {
+                if (keepFocused && w === focusedWindow) {
+                    this.logDebug(`Keeping focused window: ${w.get_title()}`);
+                    return;
+                }
+                w.minimize();
+            });
+        } else {
+            this.logDebug("Unminimizing all valid windows");
+            validWindows.forEach(w => w.unminimize());
+        }
+    }
 
-	disable() {
-		for (let id of settingsSignals) {
-			Settings.disconnect(id);
-		}
-		settingsSignals = [];
-		for (let id of panelSignals) {
-			panelButton.disconnect(id);
-		}
-		panelSignals = [];
-		resetToggleStatus();
-		ignoredWindows = [];
-		Settings = null;
-		removeButton();
-		Main.wm.removeKeybinding('shortcut');
-	}
+    _shouldIgnore(window) {
+        if (!window) return true;
+
+        const title = window.get_title() ?? 'Unknown';
+        const window_type = window.get_window_type();
+        const wm_class = (window.get_wm_class() ?? '').toLowerCase();
+        const focusedWindow = global.display.get_focus_window();
+
+        if (window === focusedWindow && this._settings.get_boolean('keep-focused')) {
+            this.logDebug(`Ignoring: ${title} (Focused)`);
+            return true;
+        }
+
+        if (window_type === Meta.WindowType.DESKTOP || 
+            window_type === Meta.WindowType.DOCK || 
+            window_type === Meta.WindowType.MODAL_DIALOG) {
+            this.logDebug(`Ignoring: ${title} (Type: ${window_type})`);
+            return true;
+        }
+
+        if (wm_class.includes('ding') || wm_class.includes('desktop')) {
+            this.logDebug(`Ignoring: ${title} (DING/Desktop class)`);
+            return true;
+        }
+
+        if (wm_class.endsWith('notejot') || wm_class === 'conky' || wm_class === 'gjs') {
+            this.logDebug(`Ignoring: ${title} (Specific class: ${wm_class})`);
+            return true;
+        }
+
+        if (title.startsWith('@!') && (title.endsWith('BDH') || title.endsWith('BDHF'))) {
+            this.logDebug(`Ignoring: ${title} (Special title pattern)`);
+            return true;
+        }
+
+        return false;
+    }
+
+    disable() {
+        this.logDebug("Extension Disabled");
+        this.previewDesktop(false);
+        this._signals.forEach(id => this._settings.disconnect(id));
+        Main.wm.removeKeybinding('shortcut');
+        if (this._indicator) {
+            this._indicator.destroy();
+            this._indicator = null;
+        }
+        this._settings = null;
+    }
 }
