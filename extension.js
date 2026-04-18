@@ -3,7 +3,8 @@
  * this very same extension. It's just to keep things neat and clean, instead of
  * polluting EGO with plenty of similar extensions that do almost the same thing.
  *
- * If you want to debug this extension, open 'metadata.json' and set 'debug' to true.
+ * If you want to debug this extension, open 'metadata.json' and add
+ * "debug" : true
  * You can read the debugging messages in the terminal if you give the following:
  * $ journalctl --user -f -o cat | grep Show-Desktop-Debug
  */
