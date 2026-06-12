@@ -14,20 +14,21 @@
 		
 		<key name="hover-preview" type="b">
 			<default>true</default>
-			<summary>Enable hover preview</summary>
+			<summary>Hover Preview</summary>
+			<description>Windows becomes transparent when hovering the panel indicator</description>
 		</key>
 		
 		<key name="hover-delay" type="i">
 			<default>500</default>
-			<summary>Hover preview delay</summary>
-			<description>Time in milliseconds before the preview is activated.</description>
+			<summary>Preview Delay</summary>
+			<description>Delay before preview is activated</description>
 			<range min="100" max="2000"/>
 		</key>
 		
 		<key name="hover-opacity" type="i">
 			<default>65</default>
-			<summary>Preview Opacity</summary>
-				<description>Opacity level applied to windows during preview.</description>
+			<summary>Windows Opacity</summary>
+				<description>Windows opacity during preview</description>
 				<range min="10" max="100"/>
 		</key>
 		

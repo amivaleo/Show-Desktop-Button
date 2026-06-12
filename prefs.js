@@ -52,7 +52,7 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		// Row for the keep-focused setting
 		const rowKeepFocused = new Adw.ActionRow({
 			title: _("Keep Focused Window"),
-			subtitle: _("Do not hide the focused window."),
+			subtitle: _("Do not hide the focused window"),
 		});
 		
 		const switchKeepFocused = new Gtk.Switch({
@@ -74,7 +74,7 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		// Row for the indicator position setting
 		const indicatorPosition = new Adw.ComboRow({
 			title: _('Position on Panel'),
-			subtitle: _('Position of the indicatore on the panel'),
+			subtitle: _('Position of the indicator on the panel'),
 			model: new Gtk.StringList({ strings: [_("Far Left"), _("Left"), _("Center-left"), _("Center-right"), _("Right"), _("Far Right")] }),
 		});
 		indicatorPosition.set_selected(settings.get_enum('indicator-position'));
@@ -85,13 +85,11 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		
 		
 		
-		// Row for the indicator icon name setting
+		// Row for the indicator icon setting
 		const rowIndicatorIconName = new Adw.ActionRow({
-			title: _("Icon Name"),
-			subtitle: _("Icons must be located only in the following paths:\n") +
-						"/usr/share/icons/\n" +
-						"~/.icons/\n" +
-						"~/.local/share/icons/\n"
+			title: _("Icon"),
+			subtitle: _("Icon file used for the panel indicator.\nIcons must be located only in the following paths:\n") +
+						"/usr/share/icons/ or ~/.icons/ or ~/.local/share/icons/"
 		});
 		
 		const boxIndicatorIconName = new Gtk.Box({
@@ -118,7 +116,7 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		
 		const buttonResetIndicatorIconName = new Gtk.Button();
 		buttonResetIndicatorIconName.set_child(new Gtk.Image({ icon_name: 'edit-undo-symbolic' }));
-		buttonResetIndicatorIconName.set_tooltip_text(_('Click to reset the indicator icon'));
+		buttonResetIndicatorIconName.set_tooltip_text(_('Click to reset the default icon'));
 		buttonResetIndicatorIconName.connect('clicked', () => {
 			settings.reset('indicator-icon-name');
 			this._updateLabelIndicatorIconName();
@@ -135,7 +133,7 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		// Row for hover preview setting
 		const rowHoverPreview = new Adw.ActionRow({
 			title: _("Hover Preview"),
-			subtitle: _("Make windows transparent when hovering the panel indicator"),
+			subtitle: _("Windows becomes transparent when hovering the panel indicator"),
 		});
 		
 		const switchHoverPreview = new Gtk.Switch({
@@ -155,11 +153,10 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		
 		
 		
-		
 		// Row for preview delay
 		const rowHoverDelay = new Adw.ActionRow({
-			title: _("Hover Delay"),
-			subtitle: _("Delay before preview appears"),
+			title: _("Preview Delay"),
+			subtitle: _("Delay before preview is activated"),
 		});
 			
 		const rowHoverDelayScale = new Gtk.Scale({
@@ -213,7 +210,7 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		
 		// Row for preview opacity
 		const rowPreviewOpacity = new Adw.ActionRow({
-			title: _("Hover Opacity"),
+			title: _("Windows Opacity"),
 			subtitle: _("Windows opacity during preview"),
 		});
 		
@@ -277,6 +274,7 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		// Row for the shortcut key settings
 		const rowIndicatorShortcut = new Adw.ActionRow({
 			title: _("Shortcut"),
+			subtitle: _("Shortcut to activate the extension"),
 			activatable: true,
 		});
 		
