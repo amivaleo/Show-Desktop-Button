@@ -17,6 +17,7 @@ If you'd like to help translate the extension, download and edit `show-desktop-b
 
 | Version | Changes |
 |---------|---------|
+| 53    | Added preview options (delay, opacity) and updated settings UI |
 | 52    | Updating for Gnome 50 |
 | 51    | Polishing... |
 | 50    | Added hover preview & fix ignored windows whose title includes 'desktop' |

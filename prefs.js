@@ -10,8 +10,22 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 	fillPreferencesWindow(window) {
 		const settings = this.getSettings();
 		const page = new Adw.PreferencesPage();
-		const group = new Adw.PreferencesGroup();
-		page.add(group);
+		const groupBehaviour = new Adw.PreferencesGroup({
+				title: _("Behaviour"),
+		});
+		const groupPanel = new Adw.PreferencesGroup({
+				title: _("Aspect"),
+		});
+				const groupPreview = new Adw.PreferencesGroup({
+				title: _("Preview"),
+		});
+				const groupShortcut = new Adw.PreferencesGroup({
+				title: _("Shortcut"),
+		});
+		page.add(groupBehaviour);
+		page.add(groupPanel);
+		page.add(groupPreview);
+		page.add(groupShortcut);
 		
 		
 		
@@ -53,7 +67,21 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		});
 		
 		rowKeepFocused.add_suffix(switchKeepFocused);
-		group.add(rowKeepFocused);
+		groupBehaviour.add(rowKeepFocused);
+		
+		
+		
+		// Row for the indicator position setting
+		const indicatorPosition = new Adw.ComboRow({
+			title: _('Position on Panel'),
+			subtitle: _('Position of the indicatore on the panel'),
+			model: new Gtk.StringList({ strings: [_("Far Left"), _("Left"), _("Center-left"), _("Center-right"), _("Right"), _("Far Right")] }),
+		});
+		indicatorPosition.set_selected(settings.get_enum('indicator-position'));
+		indicatorPosition.connect('notify::selected', () => {
+			settings.set_enum('indicator-position', indicatorPosition.selected);
+		});
+		groupPanel.add(indicatorPosition);
 		
 		
 		
@@ -100,46 +128,151 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		boxIndicatorIconName.append(buttonResetIndicatorIconName);
 		
 		rowIndicatorIconName.add_suffix(boxIndicatorIconName);
-		group.add(rowIndicatorIconName);
+		groupPanel.add(rowIndicatorIconName);
 		
 		
 		
-		// Row for the indicator position setting
-		const indicatorPosition = new Adw.ComboRow({
-			title: _('Position on Panel'),
-			model: new Gtk.StringList({ strings: [_("Far Left"), _("Left"), _("Center-left"), _("Center-right"), _("Right"), _("Far Right")] }),
-		});
-		indicatorPosition.set_selected(settings.get_enum('indicator-position'));
-		indicatorPosition.connect('notify::selected', () => {
-			settings.set_enum('indicator-position', indicatorPosition.selected);
+		// Row for hover preview setting
+		const rowHoverPreview = new Adw.ActionRow({
+			title: _("Hover Preview"),
+			subtitle: _("Make windows transparent when hovering the panel indicator"),
 		});
 		
-		group.add(indicatorPosition);
+		const switchHoverPreview = new Gtk.Switch({
+			active: settings.get_boolean('hover-preview'),
+			valign: Gtk.Align.CENTER,
+		});
+		
+		switchHoverPreview.connect('state-set', (widget, state) => {
+			settings.set_boolean('hover-preview', state);
+		});
+		
+		settings.connect('changed::hover-preview', () => {
+			switchHoverPreview.set_active(settings.get_boolean('hover-preview'));
+		});
+		rowHoverPreview.add_suffix(switchHoverPreview);
+		groupPreview.add(rowHoverPreview);
 		
 		
 		
-        // Row for hover preview setting
-        const rowHoverPreview = new Adw.ActionRow({
-            title: _("Hover Preview"),
-            subtitle: _("Make windows transparent when hovering the panel indicator"),
-        });
-        
-        const switchHoverPreview = new Gtk.Switch({
-            active: settings.get_boolean('hover-preview'),
-            valign: Gtk.Align.CENTER,
-        });
-        
-        switchHoverPreview.connect('state-set', (widget, state) => {
-            settings.set_boolean('hover-preview', state);
-        });
-            
-        settings.connect('changed::hover-preview', () => {
-            switchHoverPreview.set_active(settings.get_boolean('hover-preview'));
-        });
-        rowHoverPreview.add_suffix(switchHoverPreview);
-        group.add(rowHoverPreview);
+		
+		// Row for preview delay
+		const rowHoverDelay = new Adw.ActionRow({
+			title: _("Hover Delay"),
+			subtitle: _("Delay before preview appears"),
+		});
+			
+		const rowHoverDelayScale = new Gtk.Scale({
+			orientation: Gtk.Orientation.HORIZONTAL,
+			adjustment: new Gtk.Adjustment({
+				lower: 100,
+				upper: 2000,
+				step_increment: 50,
+				page_increment: 100,
+			}),
+			digits: 0,
+			hexpand: true,
+			valign: Gtk.Align.CENTER,
+			width_request: 100,
+		});
+		rowHoverDelayScale.add_mark(500, Gtk.PositionType.TOP, null);
+		
+		const rowHoverDelayScaleLabel = new Gtk.Label({
+			xalign: 1,
+			hexpand: false,
+			justify: Gtk.Justification.RIGHT,
+			width_chars: 8,
+		});
+		rowHoverDelayScaleLabel.get_style_context().add_class('dim-label');
+		const rowHoverDelayScaleLabelUpdate = (v) => {
+			rowHoverDelayScaleLabel.set_text(`${Math.round(v)} ms`);
+		};
+		rowHoverDelayScaleLabelUpdate(rowHoverDelayScale.get_value());
+		rowHoverDelayScale.connect('value-changed', () => {
+			const v = rowHoverDelayScale.get_value();
+			rowHoverDelayScaleLabelUpdate(v);
+			settings.set_int('hover-delay', Math.round(v));
+		});
+		rowHoverDelayScale.set_value(settings.get_int('hover-delay'));
+		
+		settings.connect('changed::hover-delay', () => {
+			rowHoverDelayScale.set_value(settings.get_int('hover-delay'));
+		});
+		
+		const rowHoverDelayBox = new Gtk.Box({
+			spacing: 10,
+			valign: Gtk.Align.CENTER,
+		});
+		
+		rowHoverDelayBox.append(rowHoverDelayScaleLabel);
+		rowHoverDelayBox.append(rowHoverDelayScale);			
+		rowHoverDelay.add_suffix(rowHoverDelayBox);
+		groupPreview.add(rowHoverDelay);
 		
 		
+		
+		// Row for preview opacity
+		const rowPreviewOpacity = new Adw.ActionRow({
+			title: _("Hover Opacity"),
+			subtitle: _("Windows opacity during preview"),
+		});
+		
+		const rowPreviewOpacityScale = new Gtk.Scale({
+			orientation: Gtk.Orientation.HORIZONTAL,
+			adjustment: new Gtk.Adjustment({
+				lower: 10,
+				upper: 90,
+				step_increment: 1,
+				page_increment: 5,
+			}),
+			digits: 0,
+			hexpand: true,
+			valign: Gtk.Align.CENTER,
+			width_request: 100,
+		});
+		rowPreviewOpacityScale.add_mark(65, Gtk.PositionType.TOP, null);
+		
+		const rowPreviewOpacityScaleLabel = new Gtk.Label({
+			xalign: 1,
+			hexpand: false,
+			justify: Gtk.Justification.RIGHT,
+			width_chars: 8,
+		});
+		rowPreviewOpacityScaleLabel.get_style_context().add_class('dim-label');
+		const rowPreviewOpacityScaleLabelUpdate = (v) => {
+			rowPreviewOpacityScaleLabel.set_text(`${Math.round(v)}%`);
+		};	
+		rowPreviewOpacityScaleLabelUpdate(rowPreviewOpacityScale.get_value());
+		rowPreviewOpacityScale.connect('value-changed', () => {
+			const v = rowPreviewOpacityScale.get_value();
+			rowPreviewOpacityScaleLabelUpdate(v);
+			settings.set_int('hover-opacity', Math.round(v));
+		});
+		rowPreviewOpacityScale.set_value(settings.get_int('hover-opacity'));
+		
+		settings.connect('changed::hover-opacity', () => {
+			rowPreviewOpacityScale.set_value(settings.get_int('hover-opacity'));
+		});
+		
+		const rowPreviewOpacityBox = new Gtk.Box({
+			spacing: 10,
+			valign: Gtk.Align.CENTER,
+		});
+		rowPreviewOpacityBox.append(rowPreviewOpacityScaleLabel);
+		rowPreviewOpacityBox.append(rowPreviewOpacityScale);
+		rowPreviewOpacity.add_suffix(rowPreviewOpacityBox);
+		groupPreview.add(rowPreviewOpacity);
+		
+		
+		
+		const setHoverSensitivity = () => {
+			const active = settings.get_boolean('hover-preview');
+			rowHoverDelay.set_sensitive(active);
+			rowPreviewOpacity.set_sensitive(active);
+		};
+		
+		setHoverSensitivity();
+		settings.connect('changed::hover-preview', setHoverSensitivity);
 		
 		// Row for the shortcut key settings
 		const rowIndicatorShortcut = new Adw.ActionRow({
@@ -177,7 +310,7 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		boxIndicatorShortcut.append(deleteIndicatorShortcut);
 		
 		rowIndicatorShortcut.add_suffix(boxIndicatorShortcut);
-		group.add(rowIndicatorShortcut);
+		groupShortcut.add(rowIndicatorShortcut);
 		
 		
 		
@@ -190,7 +323,7 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		const filename = settings.get_string('indicator-icon-name');
 		this.buttonIndicatorIconName.get_child().set_label(GLib.basename(filename));
 	}
-
+	
 	updateHotkeyButton(btn, hotkeyKey, settings) {
 		const text = settings.get_strv(hotkeyKey)[0];
 		btn.set_label(text ? text : _('Click to assign shortcut')); // Set button label based on shortcut
@@ -218,7 +351,7 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		
 		const label = new Gtk.Label({
 			vexpand: true,
-			label: _('Press keyboard shortcut, or Escape to cancel, or BackSpace to clear the shortcut.'),
+			label: _('Press keyboard shortcut, or Escape to cancel, or BackSpace to clear the shortcut'),
 		});
 		box.append(label);
 		

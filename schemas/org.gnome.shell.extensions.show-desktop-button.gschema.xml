@@ -13,10 +13,24 @@
 	<schema path="/org/gnome/shell/extensions/show-desktop-button/" id="org.gnome.shell.extensions.show-desktop-button">
 		
 		<key name="hover-preview" type="b">
-      <default>true</default>
-      <summary>Enable hover preview</summary>
-    </key>
-    
+			<default>true</default>
+			<summary>Enable hover preview</summary>
+		</key>
+		
+		<key name="hover-delay" type="i">
+			<default>500</default>
+			<summary>Hover preview delay</summary>
+			<description>Time in milliseconds before the preview is activated.</description>
+			<range min="100" max="2000"/>
+		</key>
+		
+		<key name="hover-opacity" type="i">
+			<default>65</default>
+			<summary>Preview Opacity</summary>
+				<description>Opacity level applied to windows during preview.</description>
+				<range min="10" max="100"/>
+		</key>
+		
 		<key name="keep-focused" type="b">
 			<default>false</default>
 			<summary>Keep focused window</summary>
