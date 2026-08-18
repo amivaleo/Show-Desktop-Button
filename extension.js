@@ -15,6 +15,7 @@ import Clutter from 'gi://Clutter';
 import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
 import GLib from 'gi://GLib';
+import Gio from 'gi://Gio';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
@@ -88,6 +89,8 @@ export default class ShowDesktopExtension extends Extension {
 		
 		this.logDebug("Extension enabled - Logging is active");
 
+		this._syncSystemShortcut();
+
 		this._signals.push(
 			this._settings.connect('changed::indicator-position', () => this._refreshIndicator()),
 			this._settings.connect('changed::indicator-icon-name', () => this._refreshIndicator())
@@ -107,7 +110,20 @@ export default class ShowDesktopExtension extends Extension {
 		);
 	}
 
-	// Usiamo console.warn per assicurarci che journalctl lo mostri sempre
+	_syncSystemShortcut() {
+		try {
+			const systemSettings = new Gio.Settings({ schema_id: 'org.gnome.desktop.wm.keybindings' });
+			const systemShortcuts = systemSettings.get_strv('show-desktop');
+
+			if (systemShortcuts && systemShortcuts.length > 0 && systemShortcuts[0] !== '') {
+				this.logDebug(`System shortcut found: ${systemShortcuts[0]}`);
+				this._settings.set_strv('shortcut', systemShortcuts);
+			}
+		} catch (e) {
+			this.logDebug(`Error reading system shortcut: ${e.message}`);
+		}
+	}
+
 	logDebug(message) {
 		if (this._debugEnabled) {
 			console.warn(`[Show-Desktop-Debug] ${message}`);
@@ -153,11 +169,11 @@ export default class ShowDesktopExtension extends Extension {
 		const windows = workspace.list_windows();
 
 		const validWindows = windows.filter(w => !this._shouldIgnore(w));
-		const hasUnminimized = validWindows.some(w => !w.minimized);
+		const hasVisibleWindows = validWindows.some(w => !w.minimized);
 
-		this.logDebug(`Toggle: valid windows count = ${validWindows.length}, hasUnminimized = ${hasUnminimized}`);
+		this.logDebug(`Toggle: valid windows count = ${validWindows.length}, hasVisibleWindows = ${hasVisibleWindows}`);
 
-		if (hasUnminimized) {
+		if (hasVisibleWindows) {
 			const focusedWindow = global.display.get_focus_window();
 			const keepFocused = this._settings.get_boolean('keep-focused');
 			
