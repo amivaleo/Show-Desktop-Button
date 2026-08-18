@@ -194,8 +194,8 @@ export default class ShowDesktopExtension extends Extension {
 			return true;
 		}
 
-		if (wm_class.includes('ding') || wm_class.includes('desktop')) {
-			this.logDebug(`Ignoring: ${title} (DING/Desktop class)`);
+		if (window.is_skip_taskbar()) {
+			this.logDebug(`Ignoring: ${title} (Skip Taskbar)`);
 			return true;
 		}
 
