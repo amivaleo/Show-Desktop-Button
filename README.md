@@ -17,6 +17,8 @@ If you'd like to help translate the extension, download and edit `show-desktop-b
 
 | Version | Changes |
 |---------|---------|
+| 57    | Unified version for gnome 48, 49, 50. Shortcut workaroud redone |
+| 56    | Retro-edit for gnome 48 and 49: workaround for shortcut and better windows exclusion |
 | 55    | Better exclusion of desktop icons app, workaround for Settings 'hide all windows' feature |
 | 54    | Added MIT license |
 | 53    | Added preview options (delay, opacity) and updated settings UI |
