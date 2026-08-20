@@ -1,0 +1,112 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: Jimmy Scionti <jimmy.scionti@gmail.com>\n"
+"Language: it_IT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Aspect"
+msgstr "Aspect"
+
+msgid "Behaviour"
+msgstr "Comportement"
+
+msgid "Center-left"
+msgstr "Centre-gauche"
+
+msgid "Center-right"
+msgstr "Centre-droit"
+
+msgid "Click to assign shortcut"
+msgstr "Cliquer pour attribuer un raccourci"
+
+msgid "Click to change icon"
+msgstr "Cliquer pour changer l’icône"
+
+msgid "Click to reset the default icon"
+msgstr "Cliquer pour réinitialiser l’icône par défaut"
+
+msgid "Click to set shortcut"
+msgstr "Cliquer pour définir le raccourci"
+
+msgid "Delay before preview is activated"
+msgstr "Délai avant l’activation de l’aperçu"
+
+msgid "Do not hide the focused window"
+msgstr "Ne pas masquer la fenêtre active."
+
+msgid "Edit Settings shortcut"
+msgstr "Raccourci pour modifier les paramètres"
+
+msgid "Far Left"
+msgstr "Extrême gauche"
+
+msgid "Far Right"
+msgstr "Extrême droite"
+
+msgid "Hover Preview"
+msgstr "Aperçu au survol"
+
+msgid "Icon"
+msgstr "Icône"
+
+msgid ""
+"Icon file used for the panel indicator.\n"
+"Icons must be located only in the following paths:\n"
+msgstr ""
+"Fichier d’icône utilisé pour l’indicateur du panneau.\n"
+"Les icônes doivent se trouver uniquement dans les chemins suivants :\n"
+
+msgid "Internal shortcut automatically populated using Settings shortcut"
+msgstr "Raccourci interne rempli automatiquement à l'aide du raccourci des Paramètres"
+
+msgid "Keep Focused Window"
+msgstr "Conserver la fenêtre active"
+
+msgid "Keyboard > Navigation > Hide all normal windows"
+msgstr "Clavier > Navigation > Masquer toutes les fenêtres normales"
+
+msgid "Left"
+msgstr "Gauche"
+
+msgid "Position of the indicator on the panel"
+msgstr "Position de l’indicateur sur le panneau"
+
+msgid "Position on Panel"
+msgstr "Position sur le panneau"
+
+msgid "Preview"
+msgstr "Aperçu"
+
+msgid "Preview Delay"
+msgstr "Délai d’aperçu"
+
+msgid "Remove shortcut"
+msgstr "Supprimer le raccourci"
+
+msgid "Right"
+msgstr "Droite"
+
+msgid "SVG Images"
+msgstr "Images SVG"
+
+msgid "Select an SVG for the Panel Indicator"
+msgstr "Sélectionnez un SVG pour l’indicateur du panneau"
+
+msgid "Shortcut"
+msgstr "Raccourci"
+
+msgid "Windows Opacity"
+msgstr "Opacité des fenêtres"
+
+msgid "Windows becomes transparent when hovering the panel indicator"
+msgstr ""
+"Les fenêtres deviennent transparentes lors du survol de l’indicateur du "
+"panneau"
+
+msgid "Windows opacity during preview"
+msgstr "Opacité des fenêtres pendant l’aperçu"

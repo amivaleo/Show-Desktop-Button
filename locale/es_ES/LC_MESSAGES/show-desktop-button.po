@@ -1,0 +1,112 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: Jimmy Scionti <jimmy.scionti@gmail.com>\n"
+"Language: it_IT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Aspect"
+msgstr "Aspecto"
+
+msgid "Behaviour"
+msgstr "Comportamiento"
+
+msgid "Center-left"
+msgstr "Centro-izquierda"
+
+msgid "Center-right"
+msgstr "Centro-derecha"
+
+msgid "Click to assign shortcut"
+msgstr "Haz clic para asignar el atajo"
+
+msgid "Click to change icon"
+msgstr "Haz clic para cambiar el icono"
+
+msgid "Click to reset the default icon"
+msgstr "Haz clic para restaurar el icono predeterminado"
+
+msgid "Click to set shortcut"
+msgstr "Haz clic para configurar el atajo"
+
+msgid "Delay before preview is activated"
+msgstr "Retraso antes de activar la vista previa"
+
+msgid "Do not hide the focused window"
+msgstr "No ocultar la ventana enfocada."
+
+msgid "Edit Settings shortcut"
+msgstr "Atajo para editar la configuración"
+
+msgid "Far Left"
+msgstr "Extremo izquierdo"
+
+msgid "Far Right"
+msgstr "Extremo derecho"
+
+msgid "Hover Preview"
+msgstr "Vista previa al pasar el cursor"
+
+msgid "Icon"
+msgstr "Icono"
+
+msgid ""
+"Icon file used for the panel indicator.\n"
+"Icons must be located only in the following paths:\n"
+msgstr ""
+"Archivo de icono usado para el indicador del panel.\n"
+"Los iconos deben estar ubicados solo en las siguientes rutas:\n"
+
+msgid "Internal shortcut automatically populated using Settings shortcut"
+msgstr "Atajo interno rellenado automáticamente mediante el atajo de Configuración"
+
+msgid "Keep Focused Window"
+msgstr "Mantener la ventana enfocada"
+
+msgid "Keyboard > Navigation > Hide all normal windows"
+msgstr "Teclado > Navegación > Ocultar todas las ventanas normales"
+
+msgid "Left"
+msgstr "Izquierda"
+
+msgid "Position of the indicator on the panel"
+msgstr "Posición del indicador en el panel"
+
+msgid "Position on Panel"
+msgstr "Posición en el panel"
+
+msgid "Preview"
+msgstr "Vista previa"
+
+msgid "Preview Delay"
+msgstr "Retraso de vista previa"
+
+msgid "Remove shortcut"
+msgstr "Eliminar atajo"
+
+msgid "Right"
+msgstr "Derecha"
+
+msgid "SVG Images"
+msgstr "Imágenes SVG"
+
+msgid "Select an SVG for the Panel Indicator"
+msgstr "Selecciona un SVG para el indicador del panel"
+
+msgid "Shortcut"
+msgstr "Atajo"
+
+msgid "Windows Opacity"
+msgstr "Opacidad de las ventanas"
+
+msgid "Windows becomes transparent when hovering the panel indicator"
+msgstr ""
+"Las ventanas se vuelven transparentes al pasar el cursor sobre el indicador "
+"del panel"
+
+msgid "Windows opacity during preview"
+msgstr "Opacidad de las ventanas durante la vista previa"

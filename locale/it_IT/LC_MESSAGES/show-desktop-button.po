@@ -1,0 +1,109 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: Jimmy Scionti <jimmy.scionti@gmail.com>\n"
+"Language: it_IT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Aspect"
+msgstr "Aspetto"
+
+msgid "Behaviour"
+msgstr "Comportamento"
+
+msgid "Center-left"
+msgstr "Centro-sinistra"
+
+msgid "Center-right"
+msgstr "Centro-destra"
+
+msgid "Click to assign shortcut"
+msgstr "Clicca per assegnare la scorciatoia"
+
+msgid "Click to change icon"
+msgstr "Cliccare per cambiare icona"
+
+msgid "Click to reset the default icon"
+msgstr "Cliccare per ripristinare l'icona predefinita"
+
+msgid "Click to set shortcut"
+msgstr "Cliccare per impostare la scorciatoia"
+
+msgid "Delay before preview is activated"
+msgstr "Ritardo prima di attivare l'anteprima"
+
+msgid "Do not hide the focused window"
+msgstr "Non nascondere la finestra a fuoco."
+
+msgid "Edit Settings shortcut"
+msgstr "Modifica la scorciatoria in Impostazioni"
+
+msgid "Far Left"
+msgstr "Estrema sinistra"
+
+msgid "Far Right"
+msgstr "Estrema destra"
+
+msgid "Hover Preview"
+msgstr "Antemprima al passaggio del mouse"
+
+msgid "Icon"
+msgstr "Icona"
+
+msgid ""
+"Icon file used for the panel indicator.\n"
+"Icons must be located only in the following paths:\n"
+msgstr ""
+"File dell'icona usato per l'indicatore sul pannello.\n"
+"Le iconde devono trovarsi nei seguenti percorsi:\n"
+
+msgid "Internal shortcut automatically populated using Settings shortcut"
+msgstr "Scorciatoia interna popolata automaticamente con la scorciatoia di Impostazioni"
+
+msgid "Keep Focused Window"
+msgstr "Mantieni la finestra a fuoco"
+
+msgid "Keyboard > Navigation > Hide all normal windows"
+msgstr "Tastiera > Navigazione > Nascondi tutte le finestre normali"
+
+msgid "Left"
+msgstr "Sinistra"
+
+msgid "Position of the indicator on the panel"
+msgstr "Posizione dell'indicatore on the panel"
+
+msgid "Position on Panel"
+msgstr "Posizione sul pannello"
+
+msgid "Preview"
+msgstr "Anteprima"
+
+msgid "Preview Delay"
+msgstr "Ritardo nell'anteprima"
+
+msgid "Right"
+msgstr "Destra"
+
+msgid "SVG Images"
+msgstr "Immagini SVG"
+
+msgid "Select an SVG for the Panel Indicator"
+msgstr "Seleziona un SVG per l'indicatore del pannello"
+
+msgid "Shortcut"
+msgstr "Scorciatoia"
+
+msgid "Windows Opacity"
+msgstr "Opacità delle finestre"
+
+msgid "Windows becomes transparent when hovering the panel indicator"
+msgstr ""
+"Le finestre diventano trasparenti quando si posiziona il mouse "
+"sull'indicatore sul pannello"
+
+msgid "Windows opacity during preview"
+msgstr "Opacità delle finestre durante l'anteprima"

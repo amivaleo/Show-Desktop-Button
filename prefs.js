@@ -1,55 +1,50 @@
 import Adw from "gi://Adw";
 import Gio from "gi://Gio";
 import GLib from "gi://GLib";
-import Gdk from 'gi://Gdk';
 import Gtk from "gi://Gtk";
-import GObject from 'gi://GObject';
 import { ExtensionPreferences, gettext as _ } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 	fillPreferencesWindow(window) {
 		const settings = this.getSettings();
 		const page = new Adw.PreferencesPage();
+		
 		const groupBehaviour = new Adw.PreferencesGroup({
-				title: _("Behaviour"),
+			title: _("Behaviour"),
 		});
 		const groupPanel = new Adw.PreferencesGroup({
-				title: _("Aspect"),
+			title: _("Aspect"),
 		});
-				const groupPreview = new Adw.PreferencesGroup({
-				title: _("Preview"),
+		const groupPreview = new Adw.PreferencesGroup({
+			title: _("Preview"),
 		});
-				const groupShortcut = new Adw.PreferencesGroup({
-				title: _("Shortcut"),
+		const groupShortcut = new Adw.PreferencesGroup({
+			title: _("Shortcut"),
 		});
+
 		page.add(groupBehaviour);
 		page.add(groupPanel);
 		page.add(groupPreview);
 		page.add(groupShortcut);
-		
-		
-		
-		// Create a file chooser dialog for selecting images
+
+		// File chooser dialog for selecting SVG icon
 		this._fileChooser = new Gtk.FileChooserNative({
 			title: _('Select an SVG for the Panel Indicator'),
 			modal: true,
 		});
-		// Create a filter to show only image formats
 		const filter = new Gtk.FileFilter();
-		filter.set_name(_('SVG Images')); // Set a name for the filter
-		filter.add_pattern('*.svg'); // Only show SVG files
+		filter.set_name(_('SVG Images'));
+		filter.add_pattern('*.svg');
 		this._fileChooser.set_filter(filter);
-		// Define the action on response from the file chooser
+
 		this._fileChooser.connect('response', (dlg, response) => {
-			// Proceed only if the user clicks "Accept"
 			if (response !== Gtk.ResponseType.ACCEPT) return;
-			// Set the chosen file path in the settings
 			settings.set_string('indicator-icon-name', dlg.get_file().get_path());
 		});
-		
-		
-		
-		// Row for the keep-focused setting
+
+
+
+		// Row: Keep Focused Window
 		const rowKeepFocused = new Adw.ActionRow({
 			title: _("Keep Focused Window"),
 			subtitle: _("Do not hide the focused window"),
@@ -65,27 +60,28 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		settings.connect('changed::keep-focused', () => {
 			switchKeepFocused.set_active(settings.get_boolean('keep-focused'));
 		});
-		
 		rowKeepFocused.add_suffix(switchKeepFocused);
 		groupBehaviour.add(rowKeepFocused);
-		
-		
-		
-		// Row for the indicator position setting
+
+
+
+		// Row: Position on Panel
 		const indicatorPosition = new Adw.ComboRow({
 			title: _('Position on Panel'),
 			subtitle: _('Position of the indicator on the panel'),
-			model: new Gtk.StringList({ strings: [_("Far Left"), _("Left"), _("Center-left"), _("Center-right"), _("Right"), _("Far Right")] }),
+			model: new Gtk.StringList({ 
+				strings: [_("Far Left"), _("Left"), _("Center-left"), _("Center-right"), _("Right"), _("Far Right")] 
+			}),
 		});
 		indicatorPosition.set_selected(settings.get_enum('indicator-position'));
 		indicatorPosition.connect('notify::selected', () => {
 			settings.set_enum('indicator-position', indicatorPosition.selected);
 		});
 		groupPanel.add(indicatorPosition);
-		
-		
-		
-		// Row for the indicator icon setting
+
+
+
+		// Row: Indicator Icon
 		const rowIndicatorIconName = new Adw.ActionRow({
 			title: _("Icon"),
 			subtitle: _("Icon file used for the panel indicator.\nIcons must be located only in the following paths:\n") +
@@ -101,13 +97,14 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		
 		this.buttonIndicatorIconName = new Gtk.Button();
 		this.buttonIndicatorIconName.set_tooltip_text(_('Click to change icon'));
-		this.buttonIndicatorIconName.set_child(new Gtk.Label())
+		this.buttonIndicatorIconName.set_child(new Gtk.Label());
 		this.buttonIndicatorIconName.connect('clicked', () => {
 			this._fileChooser.transient_for = window;
 			const initialFolder = Gio.file_new_for_path("/usr/share/icons/");
 			this._fileChooser.set_current_folder(initialFolder);
 			this._fileChooser.show();
 		});
+		
 		this._labelIndicatorIconName = new Gtk.Label();
 		settings.connect('changed::indicator-icon-name', () => {
 			this._updateLabelIndicatorIconName();
@@ -124,13 +121,12 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		
 		boxIndicatorIconName.append(this.buttonIndicatorIconName);
 		boxIndicatorIconName.append(buttonResetIndicatorIconName);
-		
 		rowIndicatorIconName.add_suffix(boxIndicatorIconName);
 		groupPanel.add(rowIndicatorIconName);
-		
-		
-		
-		// Row for hover preview setting
+
+
+
+		// Row: Hover Preview
 		const rowHoverPreview = new Adw.ActionRow({
 			title: _("Hover Preview"),
 			subtitle: _("Windows becomes transparent when hovering the panel indicator"),
@@ -144,16 +140,15 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		switchHoverPreview.connect('state-set', (widget, state) => {
 			settings.set_boolean('hover-preview', state);
 		});
-		
 		settings.connect('changed::hover-preview', () => {
 			switchHoverPreview.set_active(settings.get_boolean('hover-preview'));
 		});
 		rowHoverPreview.add_suffix(switchHoverPreview);
 		groupPreview.add(rowHoverPreview);
-		
-		
-		
-		// Row for preview delay
+
+
+
+		// Row: Preview Delay
 		const rowHoverDelay = new Adw.ActionRow({
 			title: _("Preview Delay"),
 			subtitle: _("Delay before preview is activated"),
@@ -205,10 +200,10 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		rowHoverDelayBox.append(rowHoverDelayScale);			
 		rowHoverDelay.add_suffix(rowHoverDelayBox);
 		groupPreview.add(rowHoverDelay);
-		
-		
-		
-		// Row for preview opacity
+
+
+
+		// Row: Preview Opacity
 		const rowPreviewOpacity = new Adw.ActionRow({
 			title: _("Windows Opacity"),
 			subtitle: _("Windows opacity during preview"),
@@ -259,9 +254,7 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		rowPreviewOpacityBox.append(rowPreviewOpacityScale);
 		rowPreviewOpacity.add_suffix(rowPreviewOpacityBox);
 		groupPreview.add(rowPreviewOpacity);
-		
-		
-		
+
 		const setHoverSensitivity = () => {
 			const active = settings.get_boolean('hover-preview');
 			rowHoverDelay.set_sensitive(active);
@@ -270,50 +263,36 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		
 		setHoverSensitivity();
 		settings.connect('changed::hover-preview', setHoverSensitivity);
-		
-		// Row for the shortcut key settings
-		const rowIndicatorShortcut = new Adw.ActionRow({
-			title: _("Shortcut"),
-			subtitle: _("Shortcut to activate the extension"),
+
+
+
+		// Row: Link to System Settings for Shortcut Management
+		const rowSystemShortcut = new Adw.ActionRow({
+			title: _("Edit Settings shortcut"),
+			subtitle: _("Keyboard > Navigation > Hide all normal windows"),
 			activatable: true,
 		});
-		
-		const boxIndicatorShortcut = new Gtk.Box({
-			halign: Gtk.Align.END,
+
+		rowSystemShortcut.add_suffix(new Gtk.Image({
+			icon_name: 'adw-external-link-symbolic',
 			valign: Gtk.Align.CENTER,
-			hexpand: true,
-			spacing: 8,
+		}));
+
+		rowSystemShortcut.connect('activated', () => {
+			try {
+				Gio.Subprocess.new(
+					['gnome-control-center', 'keyboard'],
+					Gio.SubprocessFlags.NONE
+				);
+			} catch (e) {
+				console.error(`Failed to open Settings: ${e.message}`);
+			}
 		});
-		
-		const buttonIndicatorShortcut = new Gtk.Button();
-		buttonIndicatorShortcut.set_tooltip_text(_('Click to set shortcut'));
-		buttonIndicatorShortcut.connect('clicked', () => {
-			this.createShortcutDialog('shortcut', settings, window);
-		});
-		this.updateHotkeyButton(buttonIndicatorShortcut, 'shortcut', settings);
-		settings.connect(`changed::shortcut`, () => {
-			this.updateHotkeyButton(buttonIndicatorShortcut, 'shortcut', settings);
-		});
-		this.updateHotkeyButton(buttonIndicatorShortcut, 'shortcut', settings);
-		
-		const deleteIndicatorShortcut = new Gtk.Button();
-		deleteIndicatorShortcut.set_child(new Gtk.Image({ icon_name: 'edit-delete-symbolic' }));
-		deleteIndicatorShortcut.set_tooltip_text(_('Remove shortcut'));
-		deleteIndicatorShortcut.connect('clicked', () => {
-			settings.set_strv('shortcut', []); // Remove the shortcut
-			this.updateHotkeyButton(buttonIndicatorShortcut, 'shortcut', settings);
-		});
-		
-		boxIndicatorShortcut.append(buttonIndicatorShortcut);
-		boxIndicatorShortcut.append(deleteIndicatorShortcut);
-		
-		rowIndicatorShortcut.add_suffix(boxIndicatorShortcut);
-		groupShortcut.add(rowIndicatorShortcut);
-		
-		
-		
+
+		groupShortcut.add(rowSystemShortcut);
+
 		window.add(page);
-		window.connect('close-request', this.on_destroy.bind(this)); // Cleanup on close
+		window.connect('close-request', this.on_destroy.bind(this));
 	}
 	
 	_updateLabelIndicatorIconName() {
@@ -322,90 +301,7 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		this.buttonIndicatorIconName.get_child().set_label(GLib.basename(filename));
 	}
 	
-	updateHotkeyButton(btn, hotkeyKey, settings) {
-		const text = settings.get_strv(hotkeyKey)[0];
-		btn.set_label(text ? text : _('Click to assign shortcut')); // Set button label based on shortcut
-	}
-	
-	createShortcutDialog(hotkeyKey, settings, window) {
-		const dialog = new Gtk.Dialog({
-			title: 'Set shortcut',
-			use_header_bar: true,
-			modal: true,
-			resizable: false,
-		});
-		dialog.set_transient_for(window);
-		dialog.set_size_request(440, 200);
-		
-		const box = new Gtk.Box({
-			orientation: Gtk.Orientation.VERTICAL,
-			spacing: 2,
-			marginStart: 16,
-			marginEnd: 16,
-			marginTop: 16,
-			marginBottom: 16,
-		});
-		dialog.get_content_area().append(box);
-		
-		const label = new Gtk.Label({
-			vexpand: true,
-			label: _('Press keyboard shortcut, or Escape to cancel, or BackSpace to clear the shortcut'),
-		});
-		box.append(label);
-		
-		const eventController = new Gtk.EventControllerKey();
-		dialog.add_controller(eventController);
-		
-		eventController.connect('key-pressed', (_widget, keyval, keycode, state) => {
-			let mask = state & Gtk.accelerator_get_default_mod_mask();
-			mask &= ~Gdk.ModifierType.LOCK_MASK;
-			
-			// Close dialog on Escape key
-			if (mask === 0 && keyval === Gdk.KEY_Escape) {
-				dialog.visible = false;
-				return Gdk.EVENT_STOP;
-			}
-			
-			// Clear shortcut on BackSpace key
-			if (keyval === Gdk.KEY_BackSpace) {
-				settings.set_strv(hotkeyKey, []); // Clear the shortcut setting
-				dialog.close();
-				return Gdk.EVENT_STOP;
-			}
-			
-			// Validate and set new shortcut binding
-			if (this.isBindingValid({ mask, keycode, keyval })) {
-				const binding = Gtk.accelerator_name_with_keycode(null, keyval, keycode, mask);
-				settings.set_strv(hotkeyKey, [binding]);
-				dialog.close();
-			}
-			return Gdk.EVENT_STOP;
-		});
-		
-		dialog.show(); // Show the dialog
-	}
-	
-	isBindingValid({ mask, keycode, keyval }) {
-		// Validate the key binding to ensure it's a usable key combination
-		if ((mask === 0 || mask === Gdk.ModifierType.SHIFT_MASK) && keycode !== 0) {
-			if (
-				(keyval >= Gdk.KEY_a && keyval <= Gdk.KEY_z) ||
-				(keyval >= Gdk.KEY_A && keyval <= Gdk.KEY_Z) ||
-				(keyval >= Gdk.KEY_0 && keyval <= Gdk.KEY_9) ||
-				(keyval === Gdk.KEY_space && mask === 0)
-			) {
-				return false; // Prevent common keys from being used
-			}
-		}
-		// Allow valid accelerators
-		return Gtk.accelerator_valid(keyval, mask) ||
-			(keyval === Gdk.KEY_Tab && mask !== 0) ||
-			(keyval === Gdk.KEY_Scroll_Lock) ||
-			(keyval === Gdk.KEY_Break);
-	}
-	
 	on_destroy() {
-		// Clean up resources when the preferences window is closed
 		if (this._fileChooser) {
 			this._fileChooser.destroy();
 			this._fileChooser = null;

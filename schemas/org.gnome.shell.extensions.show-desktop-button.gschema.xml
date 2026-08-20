@@ -28,8 +28,8 @@
 		<key name="hover-opacity" type="i">
 			<default>65</default>
 			<summary>Windows Opacity</summary>
-				<description>Windows opacity during preview</description>
-				<range min="10" max="100"/>
+			<description>Windows opacity during preview</description>
+			<range min="10" max="100"/>
 		</key>
 		
 		<key name="keep-focused" type="b">
@@ -51,12 +51,12 @@
 			<description>Set the icon name used for the panel indicator.</description>
 		</key>
 		
-		<key name="shortcut" type="as">
-			<default><![CDATA[['<Control><Super>z']]]></default>
-			<summary>Shortcut</summary>
-			<description>Shortcut to activate Show Desktop Button.</description>
-		</key>
+		<key name="show-desktop-shortcut" type="as">
+      <default><![CDATA[['']]]></default>
+      <summary>Internal shortcut automatically populated using Settings shortcut</summary>
+    </key>
 		
 	</schema>
 	
 </schemalist>
+

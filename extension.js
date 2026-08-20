@@ -82,14 +82,12 @@ class ShowDesktopButton extends PanelMenu.Button {
 export default class ShowDesktopExtension extends Extension {
 	enable() {
 		this._settings = this.getSettings();
+		this._systemSettings = new Gio.Settings({ schema_id: 'org.gnome.desktop.wm.keybindings' });
 		this._signals = [];
 
-		// Legge "debug": true dal metadata.json
 		this._debugEnabled = this.metadata['debug'] === true;
 		
 		this.logDebug("Extension enabled - Logging is active");
-
-		this._syncSystemShortcut();
 
 		this._signals.push(
 			this._settings.connect('changed::indicator-position', () => this._refreshIndicator()),
@@ -98,30 +96,25 @@ export default class ShowDesktopExtension extends Extension {
 
 		this._refreshIndicator();
 
+		// 1. Legge la combinazione di sistema (SOLO LETTURA)
+		const systemShortcut = this._systemSettings.get_strv('show-desktop');
+
+		// 2. Copia la scorciatoia nella chiave dell'estensione
+		if (systemShortcut.length > 0) {
+			this._settings.set_strv('show-desktop-shortcut', systemShortcut);
+		}
+
+		// 3. Registra la scorciatoia sulla chiave DELL'ESTENSIONE
 		Main.wm.addKeybinding(
-			'shortcut',
+			'show-desktop-shortcut',
 			this._settings,
-			Meta.KeyBindingFlags.NONE,
-			Shell.ActionMode.ALL,
+			Meta.KeyBindingFlags.IGNORE_AUTOREPEAT,
+			Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW | Shell.ActionMode.POPUP,
 			() => {
-				this.logDebug("Shortcut pressed");
+				this.logDebug("Extension shortcut pressed");
 				this.toggleDesktop();
 			}
 		);
-	}
-
-	_syncSystemShortcut() {
-		try {
-			const systemSettings = new Gio.Settings({ schema_id: 'org.gnome.desktop.wm.keybindings' });
-			const systemShortcuts = systemSettings.get_strv('show-desktop');
-
-			if (systemShortcuts && systemShortcuts.length > 0 && systemShortcuts[0] !== '') {
-				this.logDebug(`System shortcut found: ${systemShortcuts[0]}`);
-				this._settings.set_strv('shortcut', systemShortcuts);
-			}
-		} catch (e) {
-			this.logDebug(`Error reading system shortcut: ${e.message}`);
-		}
 	}
 
 	logDebug(message) {
@@ -194,19 +187,17 @@ export default class ShowDesktopExtension extends Extension {
 		if (!window) return true;
 
 		const title = window.get_title() ?? 'Unknown';
-		const window_type = window.get_window_type();
+		const type = window.get_window_type();
 		const wm_class = (window.get_wm_class() ?? '').toLowerCase();
-		const focusedWindow = global.display.get_focus_window();
+		const focused = global.display.get_focus_window();
 
-		if (window === focusedWindow && this._settings.get_boolean('keep-focused')) {
+		if (window === focused && this._settings.get_boolean('keep-focused')) {
 			this.logDebug(`Ignoring: ${title} (Focused)`);
 			return true;
 		}
 
-		if (window_type === Meta.WindowType.DESKTOP || 
-			window_type === Meta.WindowType.DOCK || 
-			window_type === Meta.WindowType.MODAL_DIALOG) {
-			this.logDebug(`Ignoring: ${title} (Type: ${window_type})`);
+		if (type === Meta.WindowType.DESKTOP || type === Meta.WindowType.DOCK || type === Meta.WindowType.MODAL_DIALOG) {
+			this.logDebug(`Ignoring: ${title} (Type: ${type})`);
 			return true;
 		}
 
@@ -232,11 +223,15 @@ export default class ShowDesktopExtension extends Extension {
 		this.logDebug("Extension Disabled");
 		this.previewDesktop(false);
 		this._signals.forEach(id => this._settings.disconnect(id));
-		Main.wm.removeKeybinding('shortcut');
+		
+		// Rimuove la scorciatoia registrata dall'estensione
+		Main.wm.removeKeybinding('show-desktop-shortcut');
+
 		if (this._indicator) {
 			this._indicator.destroy();
 			this._indicator = null;
 		}
 		this._settings = null;
+		this._systemSettings = null;
 	}
 }
