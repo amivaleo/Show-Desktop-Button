@@ -1,12 +1,6 @@
-/* You can do whatever you want with this code, but I hope that, if you want to
- * improve it, you will talk to me so we can discuss and implement your idea into
- * this very same extension. It's just to keep things neat and clean, instead of
- * polluting EGO with plenty of similar extensions that do almost the same thing.
- *
- * If you want to debug this extension, open 'metadata.json' and add
- * "debug" : true
- * You can read the debugging messages in the terminal if you give the following:
- * $ journalctl --user -f -o cat | grep Show-Desktop-Debug
+/*
+ * Show-Desktop-Button
+ * Gnome-Shell Extension
  */
 
 import GObject from 'gi://GObject';
@@ -27,17 +21,17 @@ class ShowDesktopButton extends PanelMenu.Button {
 		super._init(0.0, extension.metadata.name, true);
 		this._extension = extension;
 		this._timerId = 0;
-
+		
 		const settings = extension.getSettings();
 		let iconPath = settings.get_string('indicator-icon-name');
 		let iconBaseName = GLib.path_get_basename(iconPath);
 		let iconName = iconBaseName.slice(0, iconBaseName.lastIndexOf('.'));
-
+		
 		this.add_child(new St.Icon({
 			icon_name: iconName,
 			style_class: 'system-status-icon',
 		}));
-
+		
 		this.connect('enter-event', () => {
 			if (this._extension.getSettings().get_boolean('hover-preview')) {
 				this._clearTimer();
@@ -50,20 +44,20 @@ class ShowDesktopButton extends PanelMenu.Button {
 				});
 			}
 		});
-
+		
 		this.connect('leave-event', () => {
 			this._clearTimer();
 			this._extension.previewDesktop(false);
 		});
 	}
-
+	
 	_clearTimer() {
 		if (this._timerId > 0) {
 			GLib.source_remove(this._timerId);
 			this._timerId = 0;
 		}
 	}
-
+	
 	vfunc_event(event) {
 		if (event.type() === Clutter.EventType.BUTTON_PRESS) {
 			this._clearTimer();
@@ -84,29 +78,24 @@ export default class ShowDesktopExtension extends Extension {
 		this._settings = this.getSettings();
 		this._systemSettings = new Gio.Settings({ schema_id: 'org.gnome.desktop.wm.keybindings' });
 		this._signals = [];
-
+		
 		this._debugEnabled = this.metadata['debug'] === true;
 		
 		this.logDebug("Extension enabled - Logging is active");
-
+		
 		this._signals.push(
 			this._settings.connect('changed::indicator-position', () => this._refreshIndicator()),
 			this._settings.connect('changed::indicator-icon-name', () => this._refreshIndicator())
 		);
-
+		
 		this._refreshIndicator();
-
-		// 1. Legge la combinazione di sistema (SOLO LETTURA)
+		
 		const systemShortcut = this._systemSettings.get_strv('show-desktop');
-
-		// 2. Copia la scorciatoia nella chiave dell'estensione
 		if (systemShortcut.length > 0) {
-			this._settings.set_strv('show-desktop-shortcut', systemShortcut);
+			this._settings.set_strv('shortcut', systemShortcut);
 		}
-
-		// 3. Registra la scorciatoia sulla chiave DELL'ESTENSIONE
 		Main.wm.addKeybinding(
-			'show-desktop-shortcut',
+			'shortcut',
 			this._settings,
 			Meta.KeyBindingFlags.IGNORE_AUTOREPEAT,
 			Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW | Shell.ActionMode.POPUP,
@@ -116,22 +105,22 @@ export default class ShowDesktopExtension extends Extension {
 			}
 		);
 	}
-
+	
 	logDebug(message) {
 		if (this._debugEnabled) {
 			console.warn(`[Show-Desktop-Debug] ${message}`);
 		}
 	}
-
+	
 	_refreshIndicator() {
 		this.logDebug("Refreshing Indicator UI");
 		if (this._indicator) {
 			this._indicator.destroy();
 			this._indicator = null;
 		}
-
+		
 		this._indicator = new ShowDesktopButton(this);
-
+		
 		const position = ['left', 'left', 'center', 'center', 'right', 'right'];
 		const qualifier = [0, 1, 0, 1, 1, -1];
 		const index = this._settings.get_enum('indicator-position');
@@ -143,7 +132,7 @@ export default class ShowDesktopExtension extends Extension {
 			position[index]
 		);
 	}
-
+	
 	previewDesktop(enable) {
 		const workspace = global.workspace_manager.get_active_workspace();
 		const windows = workspace.list_windows();
@@ -155,17 +144,17 @@ export default class ShowDesktopExtension extends Extension {
 			if (actor) actor.opacity = enable ? previewOpacity : 255;
 		});
 	}
-
+	
 	toggleDesktop() {
 		if (Main.overview.visible) return;
 		const workspace = global.workspace_manager.get_active_workspace();
 		const windows = workspace.list_windows();
-
+	
 		const validWindows = windows.filter(w => !this._shouldIgnore(w));
 		const hasVisibleWindows = validWindows.some(w => !w.minimized);
-
+	
 		this.logDebug(`Toggle: valid windows count = ${validWindows.length}, hasVisibleWindows = ${hasVisibleWindows}`);
-
+	
 		if (hasVisibleWindows) {
 			const focusedWindow = global.display.get_focus_window();
 			const keepFocused = this._settings.get_boolean('keep-focused');
@@ -182,51 +171,50 @@ export default class ShowDesktopExtension extends Extension {
 			validWindows.forEach(w => w.unminimize());
 		}
 	}
-
+	
 	_shouldIgnore(window) {
 		if (!window) return true;
-
+	
 		const title = window.get_title() ?? 'Unknown';
 		const type = window.get_window_type();
 		const wm_class = (window.get_wm_class() ?? '').toLowerCase();
 		const focused = global.display.get_focus_window();
-
+	
 		if (window === focused && this._settings.get_boolean('keep-focused')) {
 			this.logDebug(`Ignoring: ${title} (Focused)`);
 			return true;
 		}
-
+		
 		if (type === Meta.WindowType.DESKTOP || type === Meta.WindowType.DOCK || type === Meta.WindowType.MODAL_DIALOG) {
 			this.logDebug(`Ignoring: ${title} (Type: ${type})`);
 			return true;
 		}
-
+		
 		if (window.is_skip_taskbar()) {
 			this.logDebug(`Ignoring: ${title} (Skip Taskbar)`);
 			return true;
 		}
-
+		
 		if (wm_class.endsWith('notejot') || wm_class === 'conky' || wm_class === 'gjs') {
 			this.logDebug(`Ignoring: ${title} (Specific class: ${wm_class})`);
 			return true;
 		}
-
+		
 		if (title.startsWith('@!') && (title.endsWith('BDH') || title.endsWith('BDHF'))) {
 			this.logDebug(`Ignoring: ${title} (Special title pattern)`);
 			return true;
 		}
-
+		
 		return false;
 	}
-
+	
 	disable() {
 		this.logDebug("Extension Disabled");
 		this.previewDesktop(false);
 		this._signals.forEach(id => this._settings.disconnect(id));
 		
-		// Rimuove la scorciatoia registrata dall'estensione
-		Main.wm.removeKeybinding('show-desktop-shortcut');
-
+		Main.wm.removeKeybinding('shortcut');
+		
 		if (this._indicator) {
 			this._indicator.destroy();
 			this._indicator = null;

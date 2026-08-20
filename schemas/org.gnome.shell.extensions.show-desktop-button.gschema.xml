@@ -19,14 +19,14 @@
 		</key>
 		
 		<key name="hover-delay" type="i">
-			<default>500</default>
+			<default>300</default>
 			<summary>Preview Delay</summary>
 			<description>Delay before preview is activated</description>
 			<range min="100" max="2000"/>
 		</key>
 		
 		<key name="hover-opacity" type="i">
-			<default>65</default>
+			<default>40</default>
 			<summary>Windows Opacity</summary>
 			<description>Windows opacity during preview</description>
 			<range min="10" max="100"/>
@@ -51,12 +51,11 @@
 			<description>Set the icon name used for the panel indicator.</description>
 		</key>
 		
-		<key name="show-desktop-shortcut" type="as">
-      <default><![CDATA[['']]]></default>
-      <summary>Internal shortcut automatically populated using Settings shortcut</summary>
-    </key>
+		<key name="shortcut" type="as">
+			<default><![CDATA[['']]]></default>
+			<summary>Internal shortcut automatically populated using Settings shortcut</summary>
+		</key>
 		
 	</schema>
 	
 </schemalist>
-
