@@ -36,6 +36,9 @@ msgstr "Klicken, um ein Tastenkürzel festzulegen"
 msgid "Delay before preview is activated"
 msgstr "Verzögerung bis zur Aktivierung der Vorschau"
 
+msgid "Display an icon on the panel indicator"
+msgstr "Ein Symbol auf der Leistenanzeige anzeigen"
+
 msgid "Do not hide the focused window"
 msgstr "Das fokussierte Fenster nicht ausblenden."
 
@@ -91,14 +94,17 @@ msgstr "Tastenkürzel entfernen"
 msgid "Right"
 msgstr "Rechts"
 
-msgid "SVG Images"
-msgstr "SVG-Bilder"
-
 msgid "Select an SVG for the Panel Indicator"
 msgstr "SVG für die Panel-Anzeige auswählen"
 
 msgid "Shortcut"
 msgstr "Tastenkürzel"
+
+msgid "Show Icon"
+msgstr "Symbol anzeigen"
+
+msgid "SVG Images"
+msgstr "SVG-Bilder"
 
 msgid "Windows Opacity"
 msgstr "Fenstertransparenz"

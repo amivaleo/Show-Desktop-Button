@@ -36,6 +36,9 @@ msgstr "Cliccare per impostare la scorciatoia"
 msgid "Delay before preview is activated"
 msgstr "Ritardo prima di attivare l'anteprima"
 
+msgid "Display an icon on the panel indicator"
+msgstr "Mostra un'icona per l'indicatore del pannello"
+
 msgid "Do not hide the focused window"
 msgstr "Non nascondere la finestra a fuoco."
 
@@ -88,14 +91,17 @@ msgstr "Ritardo nell'anteprima"
 msgid "Right"
 msgstr "Destra"
 
-msgid "SVG Images"
-msgstr "Immagini SVG"
-
 msgid "Select an SVG for the Panel Indicator"
 msgstr "Seleziona un SVG per l'indicatore del pannello"
 
 msgid "Shortcut"
 msgstr "Scorciatoia"
+
+msgid "Show Icon"
+msgstr "Mostra icona"
+
+msgid "SVG Images"
+msgstr "Immagini SVG"
 
 msgid "Windows Opacity"
 msgstr "Opacità delle finestre"

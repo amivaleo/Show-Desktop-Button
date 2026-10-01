@@ -36,6 +36,9 @@ msgstr "Cliquer pour définir le raccourci"
 msgid "Delay before preview is activated"
 msgstr "Délai avant l’activation de l’aperçu"
 
+msgid "Display an icon on the panel indicator"
+msgstr "Afficher une icône sur l'indicateur du panneau"
+
 msgid "Do not hide the focused window"
 msgstr "Ne pas masquer la fenêtre active."
 
@@ -91,14 +94,17 @@ msgstr "Supprimer le raccourci"
 msgid "Right"
 msgstr "Droite"
 
-msgid "SVG Images"
-msgstr "Images SVG"
-
 msgid "Select an SVG for the Panel Indicator"
 msgstr "Sélectionnez un SVG pour l’indicateur du panneau"
 
 msgid "Shortcut"
 msgstr "Raccourci"
+
+msgid "Show Icon"
+msgstr "Afficher l'icône"
+
+msgid "SVG Images"
+msgstr "Images SVG"
 
 msgid "Windows Opacity"
 msgstr "Opacité des fenêtres"

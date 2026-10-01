@@ -19,14 +19,14 @@
 		</key>
 		
 		<key name="hover-delay" type="i">
-			<default>300</default>
+			<default>500</default>
 			<summary>Preview Delay</summary>
 			<description>Delay before preview is activated</description>
 			<range min="100" max="2000"/>
 		</key>
 		
 		<key name="hover-opacity" type="i">
-			<default>40</default>
+			<default>65</default>
 			<summary>Windows Opacity</summary>
 			<description>Windows opacity during preview</description>
 			<range min="10" max="100"/>
@@ -45,13 +45,26 @@
 				Possible values are: Left end, Left, Center-left, Center-right, Right, Right end.</description>
 		</key>
 		
+				<key name="indicator-padding" type="i">
+			<default>4</default>
+			<summary>Left/Right Padding</summary>
+			<description>Adjust left and right padding of the indicator.</description>
+			<range min="0" max="30"/>
+		</key>
+		
+		<key name="show-icon" type="b">
+			<default>true</default>
+			<summary>Show Icon</summary>
+			<description>Display an icon on the panel indicator.</description>
+		</key>
+		
 		<key name="indicator-icon-name" type="s">
 			<default>"user-home-symbolic.svg"</default>
 			<summary>Indicator icon name.</summary>
 			<description>Set the icon name used for the panel indicator.</description>
 		</key>
 		
-		<key name="shortcut" type="as">
+		<key name="show-desktop-shortcut" type="as">
 			<default><![CDATA[['']]]></default>
 			<summary>Internal shortcut automatically populated using Settings shortcut</summary>
 		</key>

@@ -36,6 +36,9 @@ msgstr "Haz clic para configurar el atajo"
 msgid "Delay before preview is activated"
 msgstr "Retraso antes de activar la vista previa"
 
+msgid "Display an icon on the panel indicator"
+msgstr "Mostrar un icono en el indicador del panel"
+
 msgid "Do not hide the focused window"
 msgstr "No ocultar la ventana enfocada."
 
@@ -91,14 +94,17 @@ msgstr "Eliminar atajo"
 msgid "Right"
 msgstr "Derecha"
 
-msgid "SVG Images"
-msgstr "Imágenes SVG"
-
 msgid "Select an SVG for the Panel Indicator"
 msgstr "Selecciona un SVG para el indicador del panel"
 
 msgid "Shortcut"
 msgstr "Atajo"
+
+msgid "Show Icon"
+msgstr "Mostrar icono"
+
+msgid "SVG Images"
+msgstr "Imágenes SVG"
 
 msgid "Windows Opacity"
 msgstr "Opacidad de las ventanas"

@@ -27,8 +27,6 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		page.add(groupPreview);
 		page.add(groupShortcut);
 		
-		
-		
 		// File chooser dialog for selecting SVG icon
 		this._fileChooser = new Gtk.FileChooserNative({
 			title: _('Select an SVG for the Panel Indicator'),
@@ -46,7 +44,7 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		
 		
 		
-		// Keep Focused Window
+		// Row: Keep Focused Window
 		const rowKeepFocused = new Adw.ActionRow({
 			title: _("Keep Focused Window"),
 			subtitle: _("Do not hide the focused window"),
@@ -67,7 +65,7 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		
 		
 		
-		// Position on Panel
+		// Row: Position on Panel
 		const indicatorPosition = new Adw.ComboRow({
 			title: _('Position on Panel'),
 			subtitle: _('Position of the indicator on the panel'),
@@ -81,9 +79,81 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		});
 		groupPanel.add(indicatorPosition);
 		
+		const rowShowIcon = new Adw.ActionRow({
+			title: _("Show Icon"),
+			subtitle: _("Display an icon on the panel indicator"),
+		});
 		
 		
-		// Indicator Icon
+		
+		const rowPadding = new Adw.ActionRow({
+			title: _("Left/Right Padding"),
+			subtitle: _("Adjust left and right padding of the indicator"),
+		});
+		
+		const defaultPadding = 4;
+		const rowPaddingScale = new Gtk.Scale({
+			orientation: Gtk.Orientation.HORIZONTAL,
+			adjustment: new Gtk.Adjustment({
+				lower: 0,
+				upper: 30,
+				step_increment: 1,
+				page_increment: 2,
+			}),
+			digits: 0,
+			hexpand: true,
+			valign: Gtk.Align.CENTER,
+			width_request: 100,
+		});
+		rowPaddingScale.add_mark(defaultPadding, Gtk.PositionType.TOP, null);
+		
+		const rowPaddingScaleLabel = new Gtk.Label({
+			xalign: 1,
+			hexpand: false,
+			justify: Gtk.Justification.RIGHT,
+			width_chars: 6,
+		});
+		rowPaddingScaleLabel.get_style_context().add_class('dim-label');
+		
+		const rowPaddingScaleLabelUpdate = (v) => {
+			rowPaddingScaleLabel.set_text(`${Math.round(v)} px`);
+		};
+		
+		rowPaddingScale.set_value(settings.get_int('indicator-padding'));
+		rowPaddingScaleLabelUpdate(rowPaddingScale.get_value());
+
+		rowPaddingScale.connect('value-changed', () => {
+			const v = rowPaddingScale.get_value();
+			rowPaddingScaleLabelUpdate(v);
+			settings.set_int('indicator-padding', Math.round(v));
+		});
+		
+		settings.connect('changed::indicator-padding', () => {
+			rowPaddingScale.set_value(settings.get_int('indicator-padding'));
+		});
+		
+		const rowPaddingBox = new Gtk.Box({
+			spacing: 10,
+			valign: Gtk.Align.CENTER,
+		});
+		rowPaddingBox.append(rowPaddingScaleLabel);
+		rowPaddingBox.append(rowPaddingScale);
+		rowPadding.add_suffix(rowPaddingBox);
+		groupPanel.add(rowPadding);
+		
+		
+		
+		// Row: Show icon
+		const switchShowIcon = new Gtk.Switch({
+			active: settings.get_boolean('show-icon'),
+			valign: Gtk.Align.CENTER,
+		});
+		rowShowIcon.add_suffix(switchShowIcon);
+		groupPanel.add(rowShowIcon);
+		
+		
+		
+		// Row: Indicator Icon
 		const rowIndicatorIconName = new Adw.ActionRow({
 			title: _("Icon"),
 			subtitle: _("Icon file used for the panel indicator.\nIcons must be located only in the following paths:\n") +
@@ -126,9 +196,25 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		rowIndicatorIconName.add_suffix(boxIndicatorIconName);
 		groupPanel.add(rowIndicatorIconName);
 		
+		const updateIconSensitivity = () => {
+			const active = settings.get_boolean('show-icon');
+			rowIndicatorIconName.set_sensitive(active);
+		};
+		
+		switchShowIcon.connect('state-set', (widget, state) => {
+			settings.set_boolean('show-icon', state);
+			updateIconSensitivity();
+		});
+		settings.connect('changed::show-icon', () => {
+			const state = settings.get_boolean('show-icon');
+			switchShowIcon.set_active(state);
+			updateIconSensitivity();
+		});
+		updateIconSensitivity();
 		
 		
-		// Hover Preview
+		
+		// Row: Hover Preview
 		const rowHoverPreview = new Adw.ActionRow({
 			title: _("Hover Preview"),
 			subtitle: _("Windows becomes transparent when hovering the panel indicator"),
@@ -147,10 +233,10 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		});
 		rowHoverPreview.add_suffix(switchHoverPreview);
 		groupPreview.add(rowHoverPreview);
-		
-		
-		
-		// Preview Delay
+
+
+
+		// Row: Preview Delay
 		const rowHoverDelay = new Adw.ActionRow({
 			title: _("Preview Delay"),
 			subtitle: _("Delay before preview is activated"),
@@ -169,7 +255,7 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 			valign: Gtk.Align.CENTER,
 			width_request: 100,
 		});
-		rowHoverDelayScale.add_mark(300, Gtk.PositionType.TOP, null);
+		rowHoverDelayScale.add_mark(500, Gtk.PositionType.TOP, null);
 		
 		const rowHoverDelayScaleLabel = new Gtk.Label({
 			xalign: 1,
@@ -202,10 +288,10 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		rowHoverDelayBox.append(rowHoverDelayScale);			
 		rowHoverDelay.add_suffix(rowHoverDelayBox);
 		groupPreview.add(rowHoverDelay);
-		
-		
-		
-		// Preview Opacity
+
+
+
+		// Row: Preview Opacity
 		const rowPreviewOpacity = new Adw.ActionRow({
 			title: _("Windows Opacity"),
 			subtitle: _("Windows opacity during preview"),
@@ -224,7 +310,7 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 			valign: Gtk.Align.CENTER,
 			width_request: 100,
 		});
-		rowPreviewOpacityScale.add_mark(40, Gtk.PositionType.TOP, null);
+		rowPreviewOpacityScale.add_mark(65, Gtk.PositionType.TOP, null);
 		
 		const rowPreviewOpacityScaleLabel = new Gtk.Label({
 			xalign: 1,
@@ -256,7 +342,7 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		rowPreviewOpacityBox.append(rowPreviewOpacityScale);
 		rowPreviewOpacity.add_suffix(rowPreviewOpacityBox);
 		groupPreview.add(rowPreviewOpacity);
-		
+
 		const setHoverSensitivity = () => {
 			const active = settings.get_boolean('hover-preview');
 			rowHoverDelay.set_sensitive(active);
@@ -265,21 +351,21 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 		
 		setHoverSensitivity();
 		settings.connect('changed::hover-preview', setHoverSensitivity);
-		
-		
-		
-		// Link to System Settings for Shortcut Management
+
+
+
+		// Row: Link to System Settings for Shortcut Management
 		const rowSystemShortcut = new Adw.ActionRow({
 			title: _("Edit Settings shortcut"),
 			subtitle: _("Keyboard > Navigation > Hide all normal windows"),
 			activatable: true,
 		});
-		
+
 		rowSystemShortcut.add_suffix(new Gtk.Image({
 			icon_name: 'adw-external-link-symbolic',
 			valign: Gtk.Align.CENTER,
 		}));
-		
+
 		rowSystemShortcut.connect('activated', () => {
 			try {
 				Gio.Subprocess.new(
@@ -290,9 +376,9 @@ export default class ShowDesktopButtonPrefs extends ExtensionPreferences {
 				console.error(`Failed to open Settings: ${e.message}`);
 			}
 		});
-		
+
 		groupShortcut.add(rowSystemShortcut);
-		
+
 		window.add(page);
 		window.connect('close-request', this.on_destroy.bind(this));
 	}
