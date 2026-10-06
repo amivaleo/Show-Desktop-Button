@@ -5,7 +5,7 @@
   "gettext-domain": "show-desktop-button",
   "name": "Show Desktop Button",
   "settings-schema": "org.gnome.shell.extensions.show-desktop-button",
-  "shell-version": ["48", "49", "50"],
+  "shell-version": ["48", "49", "50", "51"],
   "url": "https://github.com/amivaleo/Show-Desktop-Button",
   "uuid": "show-desktop-button@amivaleo"
 }
