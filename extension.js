@@ -24,7 +24,7 @@ class ShowDesktopButton extends PanelMenu.Button {
 			let iconPath = settings.get_string('indicator-icon-name');
 			let iconBaseName = GLib.path_get_basename(iconPath);
 			let iconName = iconBaseName.slice(0, iconBaseName.lastIndexOf('.'));
-
+			
 			const icon = new St.Icon({
 				icon_name: iconName,
 				style_class: 'system-status-icon',
@@ -37,26 +37,26 @@ class ShowDesktopButton extends PanelMenu.Button {
 			});
 			this.add_child(box);
 		}
-
-		this.connect('enter-event', () => {
-			if (this._extension.getSettings().get_boolean('hover-preview')) {
+		
+		this.connect('notify::hover', () => {
+			const settings = this._extension.getSettings();
+			if (!settings.get_boolean('hover-preview')) return;
+			if (this.hover) {
 				this._clearTimer();
-				const previewDelay = this._extension.getSettings().get_int('hover-delay');
+				const previewDelay = settings.get_int('hover-delay');
 				this._timerId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, previewDelay, () => {
 					this._extension.logDebug("Hover timeout triggered");
 					this._extension.previewDesktop(true);
 					this._timerId = 0;
 					return GLib.SOURCE_REMOVE;
 				});
+			} else {
+				this._clearTimer();
+				this._extension.previewDesktop(false);
 			}
 		});
-
-		this.connect('leave-event', () => {
-			this._clearTimer();
-			this._extension.previewDesktop(false);
-		});
 	}
-
+	
 	_clearTimer() {
 		if (this._timerId > 0) {
 			GLib.source_remove(this._timerId);
