@@ -9,6 +9,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "Adjust left and right padding of the indicator"
+msgstr "Ajustar el relleno izquierdo y derecho del indicador"
+
 msgid "Aspect"
 msgstr "Aspecto"
 
@@ -59,10 +62,10 @@ msgstr "Icono"
 
 msgid ""
 "Icon file used for the panel indicator.\n"
-"Icons must be located only in the following paths:\n"
+"Icons must be located in one of the following paths:\n"
 msgstr ""
 "Archivo de icono usado para el indicador del panel.\n"
-"Los iconos deben estar ubicados solo en las siguientes rutas:\n"
+"Los iconos deben estar ubicados en una de las siguientes rutas:\n"
 
 msgid "Internal shortcut automatically populated using Settings shortcut"
 msgstr "Atajo interno rellenado automáticamente mediante el atajo de Configuración"
@@ -72,6 +75,9 @@ msgstr "Mantener la ventana enfocada"
 
 msgid "Keyboard > Navigation > Hide all normal windows"
 msgstr "Teclado > Navegación > Ocultar todas las ventanas normales"
+
+msgid "Lateral Padding"
+msgstr "Relleno lateral"
 
 msgid "Left"
 msgstr "Izquierda"

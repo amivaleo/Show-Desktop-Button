@@ -9,6 +9,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "Adjust left and right padding of the indicator"
+msgstr "Regola la spaziatura sinistra e destra dell'indicatore"
+
 msgid "Aspect"
 msgstr "Aspetto"
 
@@ -40,7 +43,7 @@ msgid "Display an icon on the panel indicator"
 msgstr "Mostra un'icona per l'indicatore del pannello"
 
 msgid "Do not hide the focused window"
-msgstr "Non nascondere la finestra a fuoco."
+msgstr "Non nascondere la finestra a fuoco"
 
 msgid "Edit Settings shortcut"
 msgstr "Modifica la scorciatoria in Impostazioni"
@@ -52,17 +55,17 @@ msgid "Far Right"
 msgstr "Estrema destra"
 
 msgid "Hover Preview"
-msgstr "Antemprima al passaggio del mouse"
+msgstr "Anteprima al passaggio del mouse"
 
 msgid "Icon"
 msgstr "Icona"
 
 msgid ""
 "Icon file used for the panel indicator.\n"
-"Icons must be located only in the following paths:\n"
+"Icons must be located in one of the following paths:\n"
 msgstr ""
 "File dell'icona usato per l'indicatore sul pannello.\n"
-"Le iconde devono trovarsi nei seguenti percorsi:\n"
+"Le icone devono trovarsi in uno dei seguenti percorsi:\n"
 
 msgid "Internal shortcut automatically populated using Settings shortcut"
 msgstr "Scorciatoia interna popolata automaticamente con la scorciatoia di Impostazioni"
@@ -72,6 +75,9 @@ msgstr "Mantieni la finestra a fuoco"
 
 msgid "Keyboard > Navigation > Hide all normal windows"
 msgstr "Tastiera > Navigazione > Nascondi tutte le finestre normali"
+
+msgid "Lateral Padding"
+msgstr "Spaziatura laterale"
 
 msgid "Left"
 msgstr "Sinistra"

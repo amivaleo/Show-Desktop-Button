@@ -9,6 +9,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "Adjust left and right padding of the indicator"
+msgstr "Ajuster l'espacement interne gauche et droit de l'indicateur"
+
 msgid "Aspect"
 msgstr "Aspect"
 
@@ -59,10 +62,10 @@ msgstr "Icône"
 
 msgid ""
 "Icon file used for the panel indicator.\n"
-"Icons must be located only in the following paths:\n"
+"Icons must be located in one of the following paths:\n"
 msgstr ""
 "Fichier d’icône utilisé pour l’indicateur du panneau.\n"
-"Les icônes doivent se trouver uniquement dans les chemins suivants :\n"
+"Les icônes doivent être situées dans l'un des chemins suivants :\n"
 
 msgid "Internal shortcut automatically populated using Settings shortcut"
 msgstr "Raccourci interne rempli automatiquement à l'aide du raccourci des Paramètres"
@@ -72,6 +75,9 @@ msgstr "Conserver la fenêtre active"
 
 msgid "Keyboard > Navigation > Hide all normal windows"
 msgstr "Clavier > Navigation > Masquer toutes les fenêtres normales"
+
+msgid "Lateral Padding"
+msgstr "Espacement interne latéral"
 
 msgid "Left"
 msgstr "Gauche"
