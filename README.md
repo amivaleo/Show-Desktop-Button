@@ -17,6 +17,8 @@ If you'd like to help translate the extension, download and edit `show-desktop-b
 
 | Version | Changes |
 |---------|---------|
+| 61    | Polishing and better translations |
+| 60    | Better hovering |
 | 59    | Updating for Gnome 51 |
 | 58    | Add show-icon switch and icon-padding slider |
 | 57    | Unified version for gnome 48, 49, 50. Shortcut workaroud redone |
