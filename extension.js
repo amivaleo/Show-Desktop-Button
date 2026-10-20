@@ -38,6 +38,12 @@ class ShowDesktopButton extends PanelMenu.Button {
 			this.add_child(box);
 		}
 		
+		this.connect('button-press-event', () => {
+			this._clearTimer();
+			this._extension.toggleDesktop();
+			return Clutter.EVENT_STOP;
+		});
+
 		this.connect('notify::hover', () => {
 			const settings = this._extension.getSettings();
 			if (!settings.get_boolean('hover-preview')) return;
@@ -62,15 +68,6 @@ class ShowDesktopButton extends PanelMenu.Button {
 			GLib.source_remove(this._timerId);
 			this._timerId = 0;
 		}
-	}
-
-	vfunc_event(event) {
-		if (event.type() === Clutter.EventType.BUTTON_PRESS) {
-			this._clearTimer();
-			this._extension.toggleDesktop();
-			return Clutter.EVENT_STOP;
-		}
-		return Clutter.EVENT_PROPAGATE;
 	}
 	
 	destroy() {
