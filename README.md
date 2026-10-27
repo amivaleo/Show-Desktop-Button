@@ -17,6 +17,7 @@ If you'd like to help translate the extension, download and edit `show-desktop-b
 
 | Version | Changes |
 |---------|---------|
+| 63    | Better hovering feature |
 | 62    | Avoid triggering the extension by clicking anywhere else if the icon is selected |
 | 61    | Polishing and better translations |
 | 62    | Better hovering |
