@@ -38,7 +38,7 @@ class ShowDesktopButton extends PanelMenu.Button {
 			this.add_child(box);
 		}
 		
-		this.connect('button-press-event', () => {
+		this.connect('button-release-event', () => {
 			this._clearTimer();
 			this._extension.toggleDesktop();
 			return Clutter.EVENT_STOP;
